@@ -1,0 +1,17 @@
+.DS_Store
+bin/
+.cache/
+.projectile
+projectile-bookmarks.eld
+projects
+.org-id-locations
+elpa/
+eglot_jdtls_data/
+recentf
+tree-sitter/
+tutorial/
+servers/
+org-roam.db
+history
+bookmarks
+places

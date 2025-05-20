@@ -1,0 +1,6 @@
+# name: Deadline <YYYY-MM-DD Day>
+# key: dl
+# group: org
+# expand-env: ((yas-indent-line 'fixed))
+# --
+DEADLINE: <$(format-time-string "%Y-%m-%d %a" (current-time))>$0

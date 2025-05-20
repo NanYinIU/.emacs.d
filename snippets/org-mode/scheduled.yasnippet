@@ -1,0 +1,6 @@
+# name: Scheduled <YYYY-MM-DD Day>
+# key: sc
+# group: org
+# expand-env: ((yas-indent-line 'fixed))
+# --
+SCHEDULED: <$(format-time-string "%Y-%m-%d %a" (current-time))>$0

@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: plantuml
+# uuid: plantuml
+# key: <uml
+# condition: t
+# --
+#+begin_src plantuml :eval never-export :file img/${1}.png :cmdline -charset utf-8
+!include https://unpkg.com/plantuml-style-c4@latest/core.puml
+GREEN_ARROW
+@startuml
+`%`$0
+@enduml
+#+end_src
