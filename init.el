@@ -62,8 +62,6 @@
 
 (require 'package)
 
-
-
 ;; Key Modifiers
 (cond
  ((eq system-type 'windows-nt)
@@ -98,16 +96,10 @@
 ;; Add "lisp" and "site-lisp" to the beginning of `load-path`
 (defun update-load-path (&rest _)
   ;; "Update the `load-path` to prioritize personal configurations."
-  (dolist (dir '("lisp"))
+  (dolist (dir '("lisp" "site-lisp"))
     (push (expand-file-name dir user-emacs-directory) load-path)))
 ;; Add subdirectories inside "site-lisp" to `load-path`
 
-;;(defun add-subdirs-to-load-path (&rest _)
-;;  "Recursively add subdirectories in `site-lisp` to `load-path`.
-
-;; Avoid placing large files like EAF in `site-lisp` to prevent slow startup."
-;;  (let ((default-directory (expand-file-name "lisp" user-emacs-directory)))
-;;    (normal-top-level-add-subdirs-to-load-path)))
 
 ;; Ensure these functions are called after `package-initialize`
 (advice-add #'package-initialize :after #'update-load-path)
@@ -121,7 +113,6 @@
 ;;  (package-refresh-contents))
 
 ;; Requisites
-
 (require 'init-const)
 (require 'init-package)
 (require 'init-custom)
@@ -135,7 +126,7 @@
 (require 'init-proj)
 (require 'init-complete)
 (require 'init-org)
-
+;;(require 'init-nano)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

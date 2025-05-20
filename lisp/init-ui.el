@@ -33,13 +33,6 @@
   :ensure t
   :if (display-graphic-p)) ; 通常只在图形界面下启用
 
-(use-package modus-themes
-  :config
-  (setq modus-themes-italic-constructs t
-               modus-themes-bold-constructs nil))
-
-;;(load-theme 'modus-operandi :no-confirm)
-
 (use-package nerd-icons
   :ensure t
   :custom
@@ -140,26 +133,26 @@
                               `([,(cdr char-regexp) 0 font-shape-gstring]))))
     (set-char-table-parent composition-ligature-table composition-function-table))
 
-;;(use-package doom-themes
-;;
-;;  :ensure t
-;;  :config
-;;  ;; Global settings (defaults)
-;;  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-;;        doom-themes-enable-italic t) ; if nil, italics is universally disabled
-;;  ;;(load-theme 'doom-one t)
-;;
-;;  ;; Enable flashing mode-line on errors
-;;  (doom-themes-visual-bell-config)
-;;  ;; Enable custom neotree theme (nerd-icons must be installed!)
-;;  (doom-themes-neotree-config)
-;;  ;; or for treemacs users
-;;  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-;;  (doom-themes-treemacs-config)
-;;  ;; Corrects (and improves) org-mode's native fontification.
-;;  (doom-themes-org-config));;
+(use-package doom-themes
 
-;;  (load-theme 'doom-one :no-confirm)
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;;(load-theme 'doom-one t)
+
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (nerd-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config));;
+
+  (load-theme 'doom-one :no-confirm)
 ;;;;(use-package nano-theme
 ;;  :ensure t
 ;;  :defer t
@@ -203,20 +196,22 @@
 ;;  ;;   (setq flycheck-display-errors-function #'flycheck-display-error-messages-using-alert))
 ;;  )
 
-(use-package modus-themes
-  :ensure t
-  :config
-  (setq modus-themes-italic-constructs t
-        modus-themes-bold-constructs nil
-        modus-themes-disable-other-themes t
-        modus-themes-org-blocks 'gray-background)
-  (setq modus-themes-completions
-      '((matches . (extrabold underline))
-        (selection . (semibold italic))))
-  ;;(setq modus-themes-variable-pitch-ui t)
-  )
+;;(use-package modus-themes
+;;  :ensure t
+;;  :config
+;;  (setq modus-themes-italic-constructs t
+;;        modus-themes-bold-constructs nil
+;;        modus-themes-disable-other-themes t
+;;        modus-themes-org-blocks 'gray-background)
+;;  (setq modus-themes-completions
+;;      '((matches . (extrabold underline))
+;;        (selection . (semibold italic))))
+;;  ;;(setq modus-themes-variable-pitch-ui t)
+;;  )
+;;
+;;(load-theme 'modus-operandi-tinted :no-confirm)
 
-(load-theme 'modus-operandi-tinted :no-confirm)
+
 
 ;; install moe-theme easily with M-x list-packages
 ;;(moe-dark)
