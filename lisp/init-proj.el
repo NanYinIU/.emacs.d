@@ -153,5 +153,17 @@
 )
 
 ;;(treemacs-start-on-boot)
+(use-package transient
+  :ensure t)
+
+(use-package magit
+  :ensure t
+  :config
+  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+  (setq magit-save-repository-buffers 'dontask)
+  (setq magit-commit-show-diffstat t)
+  (setq git-rebase-autosquash t)
+  )
+
 
 (provide 'init-proj)

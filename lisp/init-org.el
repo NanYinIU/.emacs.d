@@ -173,6 +173,9 @@
                               ;; @see https://github.com/seagle0128/.emacs.d/issues/88
                               (make-variable-buffer-local 'show-paren-mode)
                               (setq show-paren-mode nil))))
+  :bind (
+         ("C-c [" . org-mark-ring-goto)
+         ("C-c o a" . org-agenda))
   )
 
 ;;============ org-roam ===============

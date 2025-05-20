@@ -187,21 +187,21 @@
 
 ;; (load-theme 'nano-light t)
 
-(use-package alert
-  :ensure t
-  :config
-  ;; 设置 alert 的默认样式，例如使用 child-frame
-  (setq alert-default-style 'child-frame)
-
-  ;; 你可以进一步定制 child-frame 的位置、大小、颜色等
-  ;; (setq alert-childframe-display-position 'bottom-right)
-  ;; (setq alert-fade-time 2) ; 2秒后淡出
-
-  ;; 很多包会自动检测并使用 alert，有些可能需要你显式设置
-  ;; 例如，对于 Flycheck:
-  ;; (with-eval-after-load 'flycheck
-  ;;   (setq flycheck-display-errors-function #'flycheck-display-error-messages-using-alert))
-  )
+;;(use-package alert
+;;  :ensure t
+;;  :config
+;;  ;; 设置 alert 的默认样式，例如使用 child-frame
+;;  (setq alert-default-style 'child-frame)
+;;
+;;  ;; 你可以进一步定制 child-frame 的位置、大小、颜色等
+;;  ;; (setq alert-childframe-display-position 'bottom-right)
+;;  ;; (setq alert-fade-time 2) ; 2秒后淡出
+;;
+;;  ;; 很多包会自动检测并使用 alert，有些可能需要你显式设置
+;;  ;; 例如，对于 Flycheck:
+;;  ;; (with-eval-after-load 'flycheck
+;;  ;;   (setq flycheck-display-errors-function #'flycheck-display-error-messages-using-alert))
+;;  )
 
 (use-package modus-themes
   :ensure t

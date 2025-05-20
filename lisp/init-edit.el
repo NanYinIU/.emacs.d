@@ -50,8 +50,9 @@
         )
   )
 
-(global-set-key (kbd "C-c d") #'my-duplicate-line)
-(global-set-key (kbd "C-c x") #'my-kill-entire-line)
+;; Keybindings
+(global-set-key (kbd "<s-return>") #'rectangle-mark-mode)
+
 
 (use-package smartparens
   :ensure smartparens  ;; install the package
@@ -78,10 +79,11 @@
   :config
   (which-key-mode 1)
   ;; 2. 为特定的前缀组合自定义描述
-  ;; (add-to-list 'which-key-prefix-override-rules
-  ;;                '("C-x r" . "Rectangles/Registers"))
-  ;; (add-to-list 'which-key-prefix-override-rules
-  ;;                '("C-c n" . "Org Roam"))
+  (which-key-add-key-based-replacements "C-c o" "Org/Org Roam")
+  (add-to-list 'which-key-replacement-alist '(("TAB" . nil) . ("↹" . nil)))
+  (add-to-list 'which-key-replacement-alist '(("RET" . nil) . ("⏎" . nil)))
+  (add-to-list 'which-key-replacement-alist '(("DEL" . nil) . ("⇤" . nil)))
+  (add-to-list 'which-key-replacement-alist '(("SPC" . nil) . ("␣" . nil)))
   )
 
 ;;(use-package youdao-dictionary

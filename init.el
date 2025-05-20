@@ -141,7 +141,22 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(all-the-icons apheleia benchmark-init cape corfu diminish
+                   doom-modeline doom-themes editorconfig eglot
+                   embark-consult esup exec-path-from-shell
+                   expand-region faceup gcmh gntp idlwave iedit
+                   json-mode log4e major-mode-hydra marginalia mgit
+                   modus-themes moe-theme multiple-cursors nano-theme
+                   orderless org-appear org-download
+                   org-fancy-priorities org-modern org-roam-ui
+                   protobuf-mode python quickrun rust-mode smartparens
+                   toc-org tramp transient treemacs-icons-dired
+                   treemacs-magit treemacs-nerd-icons treemacs-persp
+                   treemacs-projectile treemacs-tab-bar treesit-auto
+                   ultra-scroll verilog-mode vertico which-key
+                   window-tool-bar yasnippet-capf yasnippet-snippets
+                   youdao-dictionary)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
