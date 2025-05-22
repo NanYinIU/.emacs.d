@@ -70,14 +70,15 @@
 
 (use-package which-key
   :ensure t
+  :hook (after-init . which-key-mode)
   :init
   (setq which-key-idle-delay 0.5)
   (setq which-key-idle-secondary-delay 0.05)
   (setq which-key-popup-type 'minibuffer)
   (setq which-key-sort-order #'which-key-key-order)
   (setq which-key-add-keymap-based-replacements t)
-  :config
-  (which-key-mode 1)
+  ;;  :config
+  ;;  (which-key-mode 1)
   ;; 2. 为特定的前缀组合自定义描述
   (which-key-add-key-based-replacements "C-c o" "Org/Org Roam")
   (add-to-list 'which-key-replacement-alist '(("TAB" . nil) . ("↹" . nil)))
@@ -92,6 +93,22 @@
 ;;  :init
 ;;  (setq youdao-dictionary-app-key "5f99312ee6462e1e")
 ;;  (setq youdao-dictionary-secret-key "g6u7hTZCpv4vYJ9PD5U0Rnr46N8kGZjl"))
+
+
+(use-package keycast
+  :ensure t
+  :commands (+toggle-keycast)
+  :config
+  (defun +toggle-keycast()
+    (interactive)
+    (if (member '("" keycast-mode-line " ") global-mode-string)
+        (progn (setq global-mode-string (delete '("" keycast-mode-line " ") global-mode-string))
+               (remove-hook 'pre-command-hook 'keycast--update)
+               (message "Keycast OFF"))
+      (add-to-list 'global-mode-string '("" keycast-mode-line " "))
+      (add-hook 'pre-command-hook 'keycast--update t)
+      (message "Keycast ON"))))
+
 
 (provide 'init-edit)
 

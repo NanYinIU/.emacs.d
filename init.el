@@ -57,7 +57,7 @@
 (setq ring-bell-function 'ignore)
 (fset 'yes-or-no-p 'y-or-n-p)
 ;; 更改光标的样式
-;;(setq cursor-type 'bar)
+(setq cursor-type 'bar)
 (icomplete-mode 1)
 
 (require 'package)
@@ -132,29 +132,23 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(all-the-icons apheleia benchmark-init cape corfu diminish
-                   doom-modeline doom-themes editorconfig eglot
-                   embark-consult esup exec-path-from-shell
-                   expand-region faceup gcmh gntp idlwave iedit
-                   json-mode log4e major-mode-hydra marginalia mgit
-                   modus-themes moe-theme multiple-cursors nano-theme
-                   orderless org-appear org-download
-                   org-fancy-priorities org-modern org-roam-ui
-                   protobuf-mode python quickrun rust-mode smartparens
-                   toc-org tramp transient treemacs-icons-dired
-                   treemacs-magit treemacs-nerd-icons treemacs-persp
-                   treemacs-projectile treemacs-tab-bar treesit-auto
-                   ultra-scroll verilog-mode vertico which-key
-                   window-tool-bar yasnippet-capf yasnippet-snippets
-                   youdao-dictionary)))
+ '(org-agenda-files
+   '("/Users/gaoguoxing/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/daily/2025-05-21.org"
+     "/Users/gaoguoxing/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/TODOs.org"
+     "/Users/gaoguoxing/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/INBOX.org"
+     "/Users/gaoguoxing/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/ARCHIVED.org"
+     "/Users/gaoguoxing/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/daily/2025-05-14.org"
+     "/Users/gaoguoxing/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/daily/2025-05-15.org"
+     "/Users/gaoguoxing/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/daily/2025-05-16.org"
+     "/Users/gaoguoxing/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/daily/2025-05-19.org"
+     "/Users/gaoguoxing/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents/daily/2025-05-20.org"))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
 
 
 

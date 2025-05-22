@@ -3,6 +3,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        corfu-insert
         ignore
         keyboard-escape-quit
         mc/unmark-previous-like-this-word
@@ -13,4 +14,5 @@
 
 (setq mc/cmds-to-run-once
       '(
+        org-self-insert-command
         ))

@@ -93,8 +93,8 @@
   ;; -- Java 配置结束 --
 )
 
-(use-package rust-mode ;; If you manage rust-mode with use-package
-  :ensure t
-  :mode "\\.rs\\'")
+;;(use-package rust-mode ;; If you manage rust-mode with use-package
+;;  :ensure t
+;;  :mode "\\.rs\\'")
 
 (provide 'init-check)
