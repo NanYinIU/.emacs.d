@@ -146,4 +146,28 @@ CUSTOM-LISP-DIR should be the path to your directory containing custom .el files
 ;; 您可以将此函数绑定到一个快捷键
 ;; (global-set-key (kbd "C-c M-r") #'my-reload-config-and-custom-lisp)
 
+;; Prettify the process list (moved from init-base.el)
+(with-no-warnings
+  (defun my-list-processes--prettify ()
+    "Prettify process list."
+    (when-let* ((entries tabulated-list-entries))
+      (setq tabulated-list-entries nil)
+      (dolist (p (process-list))
+        (when-let* ((val (cadr (assoc p entries)))
+                    (name (aref val 0))
+                    (pid (aref val 1))
+                    (status (aref val 2))
+                    (status (list status
+                                  'face
+                                  (if (memq status '(stop exit closed failed))
+                                      'error
+                                    'success)))
+                    (buf-label (aref val 3))
+                    (tty (list (aref val 4) 'face 'font-lock-doc-face))
+                    (thread (list (aref val 5) 'face 'font-lock-doc-face))
+                    (cmd (list (aref val 6) 'face 'completions-annotations)))
+          (push (list p (vector name pid status buf-label tty thread cmd))
+              tabulated-list-entries)))))
+  (advice-add #'list-processes--refresh :after #'my-list-processes--prettify)))
+
 (provide 'init-funcs)

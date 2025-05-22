@@ -1,9 +1,27 @@
-;; init-proj.el --- Define functions.	-*- lexical-binding: t -*-
+;;; setup-project.el --- Project management, version control, file tree -*- lexical-binding: t; -*-
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 1. 项目管理 (Projectile)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; For magit
+(use-package magit
+  :ensure t
+  :config
+  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+  (setq magit-save-repository-buffers 'dontask)
+  (setq magit-commit-show-diffstat t)
+  (setq git-rebase-autosquash t)
+  )
+
+;; For mgit
+(use-package mgit
+  :ensure t)
+
+;; For persp-mode (perspective.el, for treemacs-persp)
+(use-package persp-mode
+  :ensure t
+  :defer t)
+
+;; For projectile (Project Interaction Library)
 (use-package projectile
+  :ensure t
   :diminish projectile-mode
   :init
   (projectile-mode +1) ; 全局启用 projectile-mode
@@ -67,29 +85,20 @@
 
     ;; --- Hydra 控制 ---
     ("q" nil "退出" :color 'blue))
-
-  ;; --- 绑定 Hydra 的触发快捷键 ---
-  ;; 将 "C-c P" (注意是大写P) 绑定到打开 projectile Hydra
-  ;; 你可以选择其他不与 projectile 默认快捷键冲突的按键
-;;(global-set-key (kbd "C-c P") #'hydra-projectile/body)
-;;:bind (("C-c p f" . projectile-find-file)          ; 在项目中查找文件
-;;       ("C-c p d" . projectile-find-dir)           ; 在项目中查找目录
-;;       ("C-c p s g" . projectile-grep)             ; 在项目中搜索内容 (grep)
-;;       ("C-c p s r" . projectile-replace)          ; 在项目中搜索并替换
-;;       ("C-c p b" . projectile-switch-to-buffer)   ; 切换到项目中已打开的 buffer
-;;       ("C-c p p" . projectile-switch-project)     ; 切换项目
-;;       ("C-c p k" . projectile-kill-buffers)       ; 关闭项目所有 buffer
-;;       ("C-c p c" . projectile-compile-project)    ; 编译项目
-;;       ("C-c p t" . projectile-run-tests)          ; 运行项目测试
-;;       ("C-c p R" . projectile-regenerate-tags)))  ; (如果使用 ctags)
-
   )
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 文件树 (Treemacs)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; For tramp
+(use-package tramp
+  :ensure t)
+
+;; For transient
+(use-package transient
+  :ensure t)
+
+;;============ Treemacs Group Start ===============
 ;; A tree layout file explorer
 (use-package treemacs
+  :ensure t
   :commands (treemacs-follow-mode
              treemacs-filewatch-mode
              treemacs-git-mode)
@@ -105,7 +114,7 @@
          :map treemacs-mode-map
          ([mouse-1]   . treemacs-single-click-expand-action))
   :config
-  (setq treemacs-collapse-dirs           (if treemacs-python-executable 3 0)
+  (setq treemacs-collapse-dirs           (if treemacs-python-executable 3 0) ; treemacs-python-executable needs to be defined
         treemacs-missing-project-action  'remove
         treemacs-sorting                 'alphabetic-asc
         treemacs-follow-after-init       t
@@ -114,56 +123,51 @@
   (treemacs-follow-mode t)
   (treemacs-filewatch-mode t)
   (pcase (cons (not (null (executable-find "git")))
-               (not (null (executable-find "python3"))))
+               (not (null (executable-find "python3")))) ; Assuming python3 is the intended check
     (`(t . t)
      (treemacs-git-mode 'deferred))
     (`(t . _)
      (treemacs-git-mode 'simple)))
+)
 
- (use-package treemacs-nerd-icons
-    :demand t
-    :when (icons-displayable-p)
-    :custom-face
-    (treemacs-nerd-icons-root-face ((t (:inherit nerd-icons-green :height 1.3))))
-    (treemacs-nerd-icons-file-face ((t (:inherit nerd-icons-dsilver))))
-    :config (treemacs-load-theme "nerd-icons"))
-
-(use-package treemacs-projectile
-  :after (treemacs projectile)
-  :ensure t)
-
-(use-package treemacs-magit
-  :after (treemacs magit)
-  :ensure t)
-
-(use-package treemacs-persp ;;treemacs-perspective if you use perspective.el vs. persp-mode
-  :after (treemacs persp-mode) ;;or perspective vs. persp-mode
-  :ensure t
-  :config (treemacs-set-scope-type 'Perspectives))
-
-(use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
-  :after (treemacs)
-  :ensure t
-  :config (treemacs-set-scope-type 'Tabs))
-
+;; For treemacs-icons-dired
 (use-package treemacs-icons-dired
+  :ensure t
   :after treemacs
   :config (treemacs-icons-dired-mode))
 
-)
-
-;;(treemacs-start-on-boot)
-(use-package transient
-  :ensure t)
-
-(use-package magit
+;; For treemacs-magit
+(use-package treemacs-magit
   :ensure t
-  :config
-  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
-  (setq magit-save-repository-buffers 'dontask)
-  (setq magit-commit-show-diffstat t)
-  (setq git-rebase-autosquash t)
-  )
+  :after (treemacs magit))
 
+;; For treemacs-nerd-icons
+(use-package treemacs-nerd-icons
+  :ensure t
+  :after treemacs ; Ensure treemacs is loaded first
+  :demand t 
+  :when (icons-displayable-p) ; icons-displayable-p function needs to be available
+  :custom-face
+  (treemacs-nerd-icons-root-face ((t (:inherit nerd-icons-green :height 1.3))))
+  (treemacs-nerd-icons-file-face ((t (:inherit nerd-icons-dsilver))))
+  :config (treemacs-load-theme "nerd-icons"))
 
-(provide 'init-proj)
+;; For treemacs-persp
+(use-package treemacs-persp ;;treemacs-perspective if you use perspective.el vs. persp-mode
+  :ensure t
+  :after (treemacs persp-mode) ;;or perspective vs. persp-mode
+  :config (treemacs-set-scope-type 'Perspectives))
+
+;; For treemacs-projectile
+(use-package treemacs-projectile
+  :ensure t
+  :after (treemacs projectile))
+
+;; For treemacs-tab-bar
+(use-package treemacs-tab-bar ;;treemacs-tab-bar if you use tab-bar-mode
+  :ensure t
+  :after (treemacs)
+  :config (treemacs-set-scope-type 'Tabs))
+;;============ Treemacs Group End ===============
+
+(provide 'setup-project)

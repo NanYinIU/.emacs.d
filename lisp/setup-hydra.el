@@ -1,6 +1,8 @@
-;;; Code:
-;;; init-hydra.el -*- lexical-binding: t; -*
+;;; setup-hydra.el --- Hydra and related configurations -*- lexical-binding: t; -*-
+
+;; For hydra
 (use-package hydra
+  :ensure t
   :hook (emacs-lisp-mode . hydra-add-imenu)
   :init
     (setq hydra-hint-display-type 'posframe)
@@ -19,7 +21,15 @@
     (hydra-set-posframe-show-params)
     (add-hook 'after-load-theme-hook #'hydra-set-posframe-show-params t))
 
+;; For major-mode-hydra
+(use-package major-mode-hydra
+  :ensure t
+  :bind
+  ("M-SPC" . major-mode-hydra))
+
+;; For pretty-hydra
 (use-package pretty-hydra
+  :ensure t
   :bind ("<f6>" . toggles-hydra/body)
   :hook (emacs-lisp-mode . (lambda ()
                              (add-to-list
@@ -73,9 +83,4 @@
   ;;     )))
   )
 
-(use-package major-mode-hydra
-  :ensure t
-  :bind
-  ("M-SPC" . major-mode-hydra))
-
-(provide 'init-hydra)
+(provide 'setup-hydra)
