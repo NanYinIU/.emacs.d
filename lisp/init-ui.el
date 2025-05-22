@@ -55,7 +55,7 @@
   :custom
   ;; 这里可以添加 doom-modeline 的其他自定义设置
   ;; 例如，调整图标大小 (如果需要)
-  (setq doom-modeline-icon-font-size 14)
+  (setq doom-modeline-icon-font-size 13)
   (setq doom-modeline-icon t)
   (setq doom-modeline-nerd-font t)
   ;; (setq nerd-icons-scale-factor 1.0) ; 也可以通过 nerd-icons 的变量调整
@@ -152,7 +152,7 @@
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config));;
 
-  (load-theme 'doom-one :no-confirm)
+  (load-theme 'doom-tomorrow-night :no-confirm)
 ;;;;(use-package nano-theme
 ;;  :ensure t
 ;;  :defer t
