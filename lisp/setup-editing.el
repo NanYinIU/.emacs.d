@@ -24,10 +24,6 @@
   ;; (setq avy-style 'at-full)      ; 'at-full 会替换字符，'pre 在字符前显示，'overlay 用覆盖层
   )
 
-;; For diminish
-(use-package diminish
-  :ensure t)
-
 ;; For editorconfig
 (use-package editorconfig
   :ensure t

@@ -7,6 +7,30 @@
   (apheleia-global-mode +1) ; 全局启用，它会根据项目和文件类型自动选择格式化器
   )
 
+;; For cargo (Rust build tool integration)
+(use-package cargo
+  :ensure t ; Assuming cargo is an external package
+  :hook (rust-mode . cargo-minor-mode)
+  :bind (:map rust-mode-map
+              (("C-c C-t" . my/cargo-test-current)))
+  :custom
+  (cargo-process--command-current-test "test --color never")
+  (cargo-process--enable-rust-backtrace t)
+  :config
+  (setq shell-command-switch "-ic") ; From init-rust.el
+  (define-key cargo-mode-map (kbd "C-c C-c") nil) ; From init-rust.el
+  ;; Define helper function from init-rust.el
+  (defun my/cargo-test-current ()
+    (interactive)
+    (setenv "RUST_LOG" "debug")
+    (cargo-process-current-test)))
+
+;; For conf-toml-mode (TOML configuration file mode)
+(use-package conf-toml-mode
+  :ensure nil ; As specified in init-rust.el, assuming it's built-in or pulled by another package
+  :mode "\\.toml\\'" ; Add lazy-load by file type
+  :hook (conf-toml-mode . rust-playground-mode)) ; From init-rust.el
+
 ;; For eglot
 (use-package eglot
   :ensure t
@@ -134,8 +158,38 @@
 
 ;; For rust-mode
 (use-package rust-mode
-  :ensure t
-  :mode "\\.rs\\'")
+  :ensure t ; Ensure rust-mode itself is installed
+  :mode "\\.rs\\'" ; Retain original lazy-load by file type
+  :hook (rust-mode . my/rust-compile)
+  :config
+  (define-key rust-mode-map (kbd "C-c C-c") nil) ; From init-rust.el
+  (setq rust-format-on-save nil)                 ; From init-rust.el
+  ;; Commented out global-leader block from init-rust.el
+  ;; (global-leader
+  ;;   :major-modes
+  ;;   '(rust-mode t)
+  ;;   :keymaps
+  ;;   '(rust-mode-map)
+  ;;   "=" 'rust-format-buffer
+  ;;   "c" 'rust-compile
+  ;;   "r" 'rust-run
+  ;;   "t" 'rust-test)
+  ;; (define-key rust-mode-map (kbd "RET") 'av/auto-indent-method-maybe) ; From init-rust.el
+
+  ;; Define helper function from init-rust.el
+  (defun my/rust-compile ()
+    (setq-local compile-command "cargo check --color never --tests")))
+
+;; For rust-playground
+(use-package rust-playground
+  :ensure t ; Assuming rust-playground is an external package
+  :hook (rust-mode . rust-playground-mode)
+  :commands (rust-playground-get-snippet-basedir) ; For lazy-loading
+  :custom
+  (rust-playground-run-command "cargo run --color never")
+  :config
+  (add-hook 'conf-toml-mode 'rust-playground-mode)
+  (setq rust-playground-basedir (expand-file-name "~/Develop/rust/playground")))
 
 ;; For treesit-auto
 (use-package treesit-auto
