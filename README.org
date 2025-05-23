@@ -12,7 +12,7 @@ This repository contains a personal Emacs configuration, tailored for software d
    - Enhanced Visibility: Global line numbers and current line highlighting (`global-display-line-numbers-mode`, `global-hl-line-mode`) are enabled.
    - Parenthesis Matching: `show-paren-mode` is active for better visual matching of parentheses.
    - Splash Screen: Disabled for faster startup (`inhibit-splash-screen t`).
-   - Themes: Includes a selection of popular themes like Doom themes, Modus themes, and others, managed via packages. (Note: a specific theme is not activated by default in init.el, allowing user preference).
+   - Themes: Includes a selection of popular themes like Doom themes, Modus themes, and others, managed via packages. The doom-one theme is set as the default theme for a consistent and modern look.
 
 ** Keybindings
    - `<C-return>`: Bound to `rectangle-mark-mode` for easy rectangular text selection.
@@ -41,7 +41,7 @@ This Emacs configuration is organized to be modular and maintainable.
 
 ** Core Initialization Files
    - =early-init.el=: This file is loaded very early in the Emacs startup sequence. It's used for settings that must be applied before the package system is initialized, such as customizing `package-archives` or basic UI behavior to speed up startup.
-   - =init.el=: This is the main entry point for the configuration. It sets up fundamental behaviors, loads helper files from the `lisp/` directory, and manages package loading and customization.
+   - =init.el=: This is the main entry point for the configuration. It sets up fundamental behaviors, loads helper files from the `lisp/` directory, and manages package loading and customization. Utility functions have been moved to `init-funcs.el` for better organization.
 
 ** Key Directories
    - =lisp/=: Contains the core custom Emacs Lisp files that make up this configuration. These are typically modular files (e.g., `init-ui.el`, `init-org.el`) that handle specific features or modes, and are loaded by `init.el`.
