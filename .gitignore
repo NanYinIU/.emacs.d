@@ -15,3 +15,6 @@ org-roam.db
 history
 bookmarks
 places
+.emacs.desktop
+savehist
+saveplace
