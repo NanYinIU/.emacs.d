@@ -1,41 +1,45 @@
 ;;; setup-programming.el --- Programming language support and tools -*- lexical-binding: t; -*-
 
-;; For apheleia
+;;; Commentary:
+;; Configure programming language support and development tools
+
+;;; Code:
+
+(require 'init-const)
+(require 'init-funcs)
+
+;; For apheleia - Formatter
 (use-package apheleia
   :ensure t
   :config
-  (apheleia-global-mode +1) ; 全局启用，它会根据项目和文件类型自动选择格式化器
-  )
+  (apheleia-global-mode +1))
 
-;; For eglot
+;; For eglot - LSP client
 (use-package eglot
   :ensure t
   :hook ((python-mode . eglot-ensure)
+         (python-ts-mode . eglot-ensure)
          (rust-mode . eglot-ensure)
          (rust-ts-mode . eglot-ensure)
          (java-mode . eglot-ensure)
-         ;; Add other modes from init-complete.el if desired, e.g.:
-         ;; (c-mode . eglot-ensure)
-         ;; (c++-mode . eglot-ensure)
-         ;; (typescript-mode . eglot-ensure)
-         ;; (js-mode . eglot-ensure)
-         )
+         (c-mode . eglot-ensure)
+         (c++-mode . eglot-ensure)
+         (js-mode . eglot-ensure)
+         (typescript-mode . eglot-ensure))
   :config
-  (setq eglot-confirm-server-initiated-edits nil) ; Preserved from zz-migrated
-  ;; (setq eglot-autoreconnect 3) ; From init-complete, optional
-  ;; (setq eglot-connect-timeout 30) ; From init-complete, optional
+  (setq eglot-confirm-server-initiated-edits nil)
+  (setq eglot-autoreconnect 3)
+  (setq eglot-connect-timeout 30)
 
-  ;; Server configurations from init-complete.el
+  ;; Server configurations
   (add-to-list 'eglot-server-programs
                '(rust-ts-mode . ("rust-analyzer")))
-  (add-to-list 'eglot-server-programs ; This effectively replaces the one from init-check for rust-mode
+  (add-to-list 'eglot-server-programs
                '(rust-mode . ("rust-analyzer")))
-  (add-to-list 'eglot-server-programs ; Prefer this python config from init-complete
-                '((python-mode python-ts-mode) . ("pyright-langserver" "--stdio")))
-  ;; (add-to-list 'eglot-server-programs
-  ;;              '((python-mode python-ts-mode) . ("pylsp"))) ; Alternative python from init-complete
+  (add-to-list 'eglot-server-programs
+               '((python-mode python-ts-mode) . ("pyright-langserver" "--stdio")))
 
-  ;; Java JDT LS configuration from init-check.el (MUST BE PRESERVED)
+  ;; Java JDT LS configuration
   (let* (
          (jdtls-install-dir (expand-file-name "~/.emacs.d/servers/jdtls/"))
          (jdtls-launcher-jar (expand-file-name "plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar" jdtls-install-dir))
@@ -79,39 +83,58 @@
                                                                   (format "-Xbootclasspath/a:%s" lombok-jar))
                                                             command-args)))
                              (cons "java" command-args)))))))
-  ;; -- Java 配置结束 --
 )
 
-;; For flymake (built-in)
+;; For flymake - Syntax checking
 (use-package flymake
-  :ensure nil ;; Built-in
+  :ensure nil
   :hook (prog-mode . flymake-mode)
-  :bind ("C-c f" . flymake-show-buffer-diagnostics)
-  :config
-  (setq flymake-no-changes-timeout 0.5)
+  :bind (("C-c f" . flymake-show-buffer-diagnostics))
   :init 
   (setq flymake-no-changes-timeout nil 
-        flymake-fringe-indicator-position 'right-fringe))
+        flymake-fringe-indicator-position 'right-fringe)
+  :config
+  (setq flymake-no-changes-timeout 0.5))
 
-;; For idlwave
-(use-package idlwave
-  :ensure t)
+;; For flyspell - Spell checking
+(use-package flyspell
+  :ensure nil
+  :hook ((text-mode . flyspell-mode)
+         (prog-mode . flyspell-prog-mode))
+  :init
+  (setq ispell-program-name "aspell"
+        ispell-extra-args '("--sug-mode=ultra")))
+
+;; For eldoc - Documentation display
+(use-package eldoc
+  :ensure nil
+  :diminish
+  :hook (prog-mode . eldoc-mode)
+  :config
+  (setq eldoc-idle-delay 0.2))
 
 ;; For json-mode
 (use-package json-mode
-  :ensure t)
+  :ensure t
+  :mode "\\.json\\'")
 
-;; For log4e
-(use-package log4e
-  :ensure t)
+;; For markdown-mode
+(use-package markdown-mode
+  :ensure t
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init
+  (setq markdown-command "multimarkdown"
+        markdown-fontify-code-blocks-natively t))
 
 ;; For prog-mode general hooks
 (use-package prog-mode
   :ensure nil
   :hook ((prog-mode . prettify-symbols-mode)
-         (prog-mode . hs-minor-mode))
+         (prog-mode . hs-minor-mode)
+         (prog-mode . display-line-numbers-mode))
   :init
-  ;;(setq-default prettify-symbols-alist centaur-prettify-symbols-alist) ; This refers to a custom var, keep commented if it's not defined yet or defined in init-custom.el
   (setq prettify-symbols-unprettify-at-point 'right-edge))
 
 ;; For protobuf-mode
@@ -124,22 +147,56 @@
 
 ;; For python
 (use-package python
-  :ensure t)
+  :ensure t
+  :mode ("\\.py\\'" . python-mode)
+  :interpreter ("python" . python-mode))
 
-;; For quickrun
+;; For quickrun - Run code snippets
 (use-package quickrun
   :ensure t
   :bind (("C-<f5>" . quickrun)
          ("C-c X"  . quickrun)))
 
-;; For rust-mode
+;; For rust-mode and related tools
 (use-package rust-mode
   :ensure t
-  :mode "\\.rs\\'")
+  :mode "\\.rs\\'"
+  :hook (rust-mode . eglot-ensure))
 
-;; For treesit-auto
+;; For cargo - Rust package manager integration
+(use-package cargo
+  :ensure t
+  :hook (rust-mode . cargo-minor-mode)
+  :config
+  (setq shell-command-switch "-ic")
+  (defun my/cargo-test-current ()
+    "Run cargo test for the current test with debug logging."
+    (interactive)
+    (setenv "RUST_LOG" "debug")
+    (cargo-process-current-test))
+  (define-key cargo-mode-map (kbd "C-c C-c") nil)
+  :bind (:map rust-mode-map
+              (("C-c C-t" . my/cargo-test-current)))
+  :custom ((cargo-process--command-current-test "test --color never")
+           (cargo-process--enable-rust-backtrace t)))
+
+;; For rust-playground - Quick Rust code experimentation
+(use-package rust-playground
+  :ensure t
+  :after rust-mode
+  :custom (rust-playground-run-command "cargo run --color never")
+  :config
+  (setq rust-playground-basedir (expand-file-name "~/Develop/rust/playground"))
+  (add-hook 'conf-toml-mode-hook 'rust-playground-mode))
+
+;; Configure TOML mode for Rust
+(use-package toml-mode
+  :ensure t
+  :mode "\\.toml\\'")
+
+;; For treesit-auto - Tree-sitter support
 (use-package treesit-auto
-  :ensure t ; ensure t, as it's a package to be installed
+  :ensure t
   :demand t
   :config
   (setq treesit-auto-install 'prompt)
@@ -148,8 +205,23 @@
   (add-to-list 'treesit-extra-load-path
                (expand-file-name "tree-sitter" user-emacs-directory)))
 
-;; For verilog-mode
-(use-package verilog-mode
-  :ensure t)
+;; For yaml-mode
+(use-package yaml-mode
+  :ensure t
+  :mode ("\\.yml\\'" "\\.yaml\\'"))
+
+;; For yasnippet - Template system
+(use-package yasnippet
+  :ensure t
+  :diminish yas-minor-mode
+  :hook (prog-mode . yas-minor-mode)
+  :config
+  (yas-reload-all))
+
+;; For yasnippet-snippets - Collection of snippets
+(use-package yasnippet-snippets
+  :ensure t
+  :after yasnippet)
 
 (provide 'setup-programming)
+;;; setup-programming.el ends here

@@ -10,10 +10,6 @@
   (setq git-rebase-autosquash t)
   )
 
-;; For mgit
-(use-package mgit
-  :ensure t)
-
 ;; For persp-mode (perspective.el, for treemacs-persp)
 (use-package persp-mode
   :ensure t
@@ -39,52 +35,8 @@
     (when (executable-find "fd")
       (setq projectile-project-find-files-command '("fd" "--type" "f" "--hidden" "--exclude" ".git" "--color=never" ".")))
     )
- ;; --- Projectile Hydra 定义 ---
-  ;; 注意：defhydra 是一个宏，所以 hydra 包需要在此之前加载
-  (defhydra hydra-projectile (:color 'blue :hint nil :quit-on-error nil)
-    "
-  Projectile   ^| ^项目管理^                     ^| ^查找操作^                      ^| ^项目动作^                   ^| ^搜索与替换^
-  ---------------------------------------------------------------------------------------------------------------------------------------
-  [_P_] 切换项目       [_f_] 查找文件 (智能)        [_C_] 编译项目               [_g_] Grep (rg/ag/grep)
-  [_r_] 最近项目列表   [_d_] 查找目录               [_T_] 测试项目               [_R_] 替换
-  [_a_] 添加已知项目   [_b_] 项目内缓冲区列表       [_S_] Shell 命令             [_X_] 正则替换
-  [_D_]移除已知项目   [_o_] 打开对应文件(测试/实现) [_E_] Eshell
-  [_i_] 清除缓存       [_k_] 关闭项目所有缓冲区     [_L_] 重复上次命令
-  "
-    ;; --- 项目管理 (PROJECT Management) ---
-    ("P" projectile-switch-project :exit t)
-    ("r" projectile-recentf :exit t)
-    ("a" projectile-add-known-project :exit t)
-    ("D" projectile-remove-known-project :exit t)
-    ("i" projectile-invalidate-cache :exit t)
-    ("k" projectile-kill-buffers :exit t)
-
-    ;; --- 查找操作 (FIND in Project) ---
-    ("f" projectile-find-file-dwim :exit t)
-    ("d" projectile-find-dir :exit t)
-    ("b" projectile-switch-to-buffer :exit t)
-    ("o" projectile-find-other-file :exit t)
-
-    ;; --- 项目动作 (ACTIONS on Project) ---
-    ("C" projectile-compile-project :exit t)
-    ("T" projectile-test-project :exit t)
-    ("S" projectile-run-shell-command-in-root :exit t)
-    ("E" projectile-run-eshell :exit t)
-    ("L" projectile-repeat-last-command :exit t)
-
-    ;; --- 搜索与替换 (SEARCH & REPLACE) ---
-    ("g" (lambda ()
-           (interactive)
-           (cond
-            ((executable-find "rg") (call-interactively #'projectile-ripgrep))
-            ((executable-find "ag") (call-interactively #'projectile-ag))
-            (t (call-interactively #'projectile-grep))))
-          "Grep (rg/ag/grep)" :exit t)
-    ("R" projectile-replace :exit t)
-    ("X" projectile-replace-regexp :exit t)
-
-    ;; --- Hydra 控制 ---
-    ("q" nil "退出" :color 'blue))
+  ;; Define key bindings for projectile
+  :bind-keymap ("C-c p" . projectile-command-map)
   )
 
 ;; For tramp
@@ -145,7 +97,7 @@
 (use-package treemacs-nerd-icons
   :ensure t
   :after treemacs ; Ensure treemacs is loaded first
-  :demand t 
+  :demand t
   :when (icons-displayable-p) ; icons-displayable-p function needs to be available
   :custom-face
   (treemacs-nerd-icons-root-face ((t (:inherit nerd-icons-green :height 1.3))))

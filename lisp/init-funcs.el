@@ -1,4 +1,8 @@
-;; init-funcs.el --- Define functions.	-*- lexical-binding: t -*-
+;;; init-funcs.el --- Define functions.	-*- lexical-binding: t -*-
+
+;;; Commentary:
+;; Utility functions used throughout the configuration
+
 ;;; Code:
 
 (require 'cl-lib)
@@ -14,6 +18,14 @@
   (find-font (font-spec :name font-name)))
 
 ;; File and buffer
+(defun revert-current-buffer ()
+  "Revert the current buffer."
+  (interactive)
+  (message "Revert this buffer")
+  (text-scale-set 0)
+  (widen)
+  (revert-buffer t t))
+
 (defun revert-this-buffer ()
   "Revert the current buffer."
   (interactive)
@@ -83,16 +95,23 @@
   (interactive)
   (save-buffer-as-utf8 'gbk))
 
+(defun reload-init-file ()
+  "Reload init file."
+  (interactive)
+  (load-file user-init-file))
+
+;; Selection functions
 (defun selected-region-or-symbol-at-point ()
   "Return the selected region, otherwise return the symbol at point."
   (if (region-active-p)
       (buffer-substring-no-properties (region-beginning) (region-end))
     (thing-at-point 'symbol t)))
 
+;; Feature and display checks
 (defun icons-displayable-p ()
   "Return non-nil if icons are displayable."
-        (featurep 'nerd-icons)
-           (require 'nerd-icons nil t))
+  (and (featurep 'nerd-icons)
+       (require 'nerd-icons nil t)))
 
 (defun childframe-workable-p ()
   "Whether childframe is workable."
@@ -105,18 +124,18 @@
 
 (defun childframe-completion-workable-p ()
   "Whether childframe completion is workable."
-  (and (eq centaur-completion-style 'childframe)
+  (and (boundp 'centaur-completion-style)
+       (eq centaur-completion-style 'childframe)
        (childframe-workable-p)))
 
-
-(defun my-reload-config-and-custom-lisp ()
-  "Reload user-init-file and all .el/.elc files in CUSTOM-LISP-DIR.
-CUSTOM-LISP-DIR should be the path to your directory containing custom .el files."
+;; Configuration reload
+(defun my-reload-config-and-custom-lisp (&optional custom-lisp-dir)
+  "Reload user-init-file and all .el/.elc files in CUSTOM-LISP-DIR."
   (interactive
    (list (read-directory-name "Path to your custom Lisp directory: "
-                              (expand-file-name "lisp" user-emacs-directory) ; 默认值
+                              (expand-file-name "lisp" user-emacs-directory)
                               nil t)))
-  ;; 1. 重新加载主配置文件
+  ;; 1. Reload main configuration file
   (if (file-exists-p user-init-file)
       (progn
         (message "Reloading %s..." user-init-file)
@@ -124,9 +143,9 @@ CUSTOM-LISP-DIR should be the path to your directory containing custom .el files
         (message "Reloaded %s." user-init-file))
     (message "User init file %s not found." user-init-file))
 
-  ;; 2. 重新加载指定目录下的所有 .el 或 .elc 文件
+  ;; 2. Reload all .el or .elc files in the specified directory
   (if (file-directory-p custom-lisp-dir)
-      (let ((load-suffixes '(".elc" ".el")) ; 优先加载 .elc
+      (let ((load-suffixes '(".elc" ".el")) ; Prefer .elc files
             (reloaded-files 0)
             (failed-files 0))
         (message "Reloading Lisp files from %s..." custom-lisp-dir)
@@ -134,7 +153,7 @@ CUSTOM-LISP-DIR should be the path to your directory containing custom .el files
           (condition-case err
               (progn
                 (message "  Reloading %s..." (file-name-nondirectory file))
-                (load-file file) ; 直接 load-file 会重新执行文件内容
+                (load-file file)
                 (setq reloaded-files (1+ reloaded-files)))
             (error
              (message "  Failed to reload %s: %s" (file-name-nondirectory file) err)
@@ -143,10 +162,7 @@ CUSTOM-LISP-DIR should be the path to your directory containing custom .el files
                  custom-lisp-dir reloaded-files failed-files))
     (message "Custom Lisp directory %s not found or is not a directory." custom-lisp-dir)))
 
-;; 您可以将此函数绑定到一个快捷键
-;; (global-set-key (kbd "C-c M-r") #'my-reload-config-and-custom-lisp)
-
-;; Prettify the process list (moved from init-base.el)
+;; Process list enhancement
 (with-no-warnings
   (defun my-list-processes--prettify ()
     "Prettify process list."
@@ -167,7 +183,8 @@ CUSTOM-LISP-DIR should be the path to your directory containing custom .el files
                     (thread (list (aref val 5) 'face 'font-lock-doc-face))
                     (cmd (list (aref val 6) 'face 'completions-annotations)))
           (push (list p (vector name pid status buf-label tty thread cmd))
-              tabulated-list-entries)))))
-  (advice-add #'list-processes--refresh :after #'my-list-processes--prettify)))
+                tabulated-list-entries)))))
+  (advice-add #'list-processes--refresh :after #'my-list-processes--prettify))
 
 (provide 'init-funcs)
+;;; init-funcs.el ends here
