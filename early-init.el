@@ -1,10 +1,14 @@
-(provide 'early-init)
-;; Defer garbage collection further back in the startup process
+;;; early-init.el --- Early initialization file -*- lexical-binding: t -*-
+
+;; Defer garbage collection to improve startup time
 (setq gc-cons-threshold most-positive-fixnum)
 
-;; Prevent unwanted runtime compilation for gccemacs (native-comp) users;
-;; packages are compiled ahead-of-time when they are installed and site files
-;; are compiled when gccemacs is installed.
+;; Reset GC threshold after startup
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold (* 20 1024 1024))))
+
+;; Prevent unwanted runtime compilation for gccemacs (native-comp) users
 (setq native-comp-deferred-compilation nil ;; obsolete since 29.1
       native-comp-jit-compilation nil)
 
@@ -22,10 +26,6 @@
 ;; to skip the mtime checks on every *.elc file.
 (setq load-prefer-newer noninteractive)
 
-;; Explicitly set the prefered coding systems to avoid annoying prompt
-;; from emacs (especially on Microsoft Windows)
-(prefer-coding-system 'utf-8)
-
 ;; Inhibit resizing frame
 (setq frame-inhibit-implied-resize t)
 
@@ -37,6 +37,5 @@
   (push '(ns-transparent-titlebar . t) default-frame-alist))
 (setq-default mode-line-format nil)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(provide 'early-init)
 ;;; early-init.el ends here
-
