@@ -130,13 +130,18 @@
                                      "-----------------------------------------------------"
                                      )))
   (org-babel-do-load-languages 'org-babel-load-languages load-language-alist)
+   (define-key org-mode-map (kbd "RET")
+                'my-org/org-return)
   :hook (((org-babel-after-execute org-mode) . org-redisplay-inline-images) ; display image
          (org-indent-mode . (lambda()
                               (diminish 'org-indent-mode)
                               ;; HACK: Prevent text moving around while using brackets
                               ;; @see https://github.com/seagle0128/.emacs.d/issues/88
                               (make-variable-buffer-local 'show-paren-mode)
-                              (setq show-paren-mode nil))))
+                              (setq show-paren-mode nil)))
+         (org-mode-hook . valign-mode)
+         (org-mode-hook . org-ident-mode)
+         )
   :bind (
          ("C-c [" . org-mark-ring-goto)
          ("C-c o a" . org-agenda))

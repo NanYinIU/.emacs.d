@@ -23,8 +23,13 @@
   :bind (;; 您的 Consult 快捷键绑定... (可以根据需要精简)
          ;; 例如，保留一些核心的：
          ("C-x b" . consult-buffer)
+         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
          ;; ("M-x" . consult-complex-command) ; 或者使用默认的 execute-extended-command，让 Vertico 处理
-         ("C-c r" . consult-ripgrep)       ; ripgrep 搜索
+         ("C-c i" . consult-info)
+         ([remap Info-search] . consult-info)
+
+         ("M-s r" . consult-ripgrep)       ; ripgrep 搜索\
+         ("M-s d" . consult-fd)
          ("M-s l" . consult-line)          ; 当前 buffer 行搜索
          ;; isearch 集成等
          :map isearch-mode-map

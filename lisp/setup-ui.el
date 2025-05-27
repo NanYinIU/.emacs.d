@@ -69,8 +69,8 @@
 ;; For doom-themes
 (use-package doom-themes
   :ensure t
-  :init
-  (load-theme 'doom-one t)
+  ;;:init
+  ;;(load-theme 'doom-one t)
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
@@ -90,7 +90,9 @@
 
 ;; For moe-theme
 (use-package moe-theme
-  :ensure t)
+  :ensure t
+  :init
+  (load-theme 'moe-light t))
 
 ;; For nano-local-system (local N Λ N O system from site-lisp/nano-emacs/)
 (use-package nano-local-system
@@ -192,7 +194,7 @@
             (charset '(kana han symbol cjk-misc bopomofo))
           (set-fontset-font (frame-parameter nil 'font)
                             charset
-                            (font-spec :family "Maple Mono NL" :size 13))))))
+                            (font-spec :family "Sarasa Mono SC" :size 13))))))
 
 (defun +my|init-font(frame)
   "Initialize font for FRAME."
