@@ -32,7 +32,7 @@
   (exec-path-from-shell-arguments '("-l"))
   :config
   (when (or (memq window-system '(mac ns x))
-            (daemonp)) 
+            (daemonp))
     (exec-path-from-shell-initialize)))
 
 ;; For gcmh - Garbage Collector Magic Hack
@@ -57,7 +57,7 @@
 (use-package recentf
   :bind (("C-x C-r" . recentf-open-files))
   :hook (after-init . recentf-mode)
-  :init 
+  :init
   (setq recentf-max-saved-items 300
         recentf-exclude
         '("\.?cache" ".cask" "url" "COMMIT_EDITMSG\'" "bookmarks"
@@ -71,7 +71,7 @@
 
 ;; For savehist - Minibuffer history
 (use-package savehist
-  :ensure nil 
+  :ensure nil
   :init
   (setq savehist-file (expand-file-name "savehist" user-emacs-directory))
   (setq savehist-additional-variables '(search-ring regexp-search-ring extended-command-history))
@@ -109,7 +109,7 @@
 ;; For time - Display time in mode line
 (use-package time
   :ensure nil
-  :init 
+  :init
   (setq display-time-default-load-average nil
         display-time-format "%H:%M"))
 
@@ -119,7 +119,7 @@
   :defer t
   :config
   (setq tramp-default-method "ssh")
-  (setq tramp-auto-save-directory 
+  (setq tramp-auto-save-directory
         (expand-file-name "tramp-auto-save" user-emacs-directory)))
 
 ;; For uniquify - Better buffer naming for files with same name
@@ -163,6 +163,63 @@
         desktop-restore-eager 10
         desktop-load-locked-desktop 'ask)
   (desktop-save-mode 1))
+
+;; Assuming you have package.el initialized and MELPA added
+;; (require 'package)
+;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;; (package-initialize)
+
+(use-package vterm
+  :ensure t ; Ensures vterm is installed
+  :config
+  ;; Set your preferred shell (optional, vterm usually picks up your default shell)
+  (setq vterm-shell "zsh") ; or "bash", "fish", etc.
+
+  ;; Set a default directory for new vterm buffers (optional)
+  ;; (setq vterm-default-directory "~/")
+
+  ;; You might want vterm buffers to have unique names
+  (setq vterm-buffer-name-string "vterm:%s") ; Using %s for a counter or specific name
+
+  ;; Automatically kill the buffer when the shell exits
+  (setq vterm-kill-buffer-on-exit t)
+
+  ;; Font settings (vterm tries to use your default font, but you can customize)
+  ;;(set-face-attribute 'vterm-font nil :font "JetBrains Mono-13")
+
+  ;; Keybindings
+  ;; Global keybinding to open vterm
+  (define-key global-map (kbd "C-c t") 'vterm)
+
+  ;; Keybindings specific to vterm-mode
+  ;; Note: vterm-mode-map is defined by vterm itself,
+  ;; so we can directly use it here within the :config block.
+  (define-key vterm-mode-map (kbd "C-c C-k") 'vterm-send-C-c) ; Send C-c to the terminal process
+  (define-key vterm-mode-map (kbd "<f1>") 'vterm-other-window) ; Quickly switch to vterm in another window
+  (define-key vterm-mode-map (kbd "C-c c") 'vterm-copy-mode) ; Enter copy mode
+  (define-key vterm-mode-map (kbd "C-c y") 'vterm-yank)      ; Paste into vterm
+
+  ;; If you use Projectile, you can add the project-specific vterm command
+  ;; Ensure this runs after projectile is loaded if projectile is also managed by use-package
+  ;; or use (with-eval-after-load 'projectile ...)
+  (with-eval-after-load 'projectile
+    (defun my-projectile-vterm ()
+      "Open vterm in the current projectile project root."
+      (interactive)
+      (let ((project-root (projectile-project-root)))
+        (if project-root
+            (vterm project-root)
+          (vterm))))
+    ;; You might want to bind this within projectile's map or globally
+    ;; For example, if projectile-mode-map is active in your project buffers:
+    (define-key projectile-mode-map (kbd "C-c p t") #'my-projectile-vterm)
+    ;; Or a global keybinding if you prefer
+    ;; (define-key global-map (kbd "C-x p t") #'my-projectile-vterm)
+    )
+  ;; :hook
+  ;; Example hook: if you want to do something every time vterm-mode is enabled
+  ;; (vterm-mode . (lambda () (message "vterm ready!")))
+  )
 
 (provide 'setup-core)
 ;;; setup-core.el ends here

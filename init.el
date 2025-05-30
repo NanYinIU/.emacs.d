@@ -137,6 +137,7 @@
 (require 'setup-programming) ; Programming language support
 (require 'setup-project)    ; Project management
 (require 'setup-misc)       ; Miscellaneous settings
+(require 'setup-ai)
 
 ;; Variables configured via the custom UI go in custom.el
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

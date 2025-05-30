@@ -21,7 +21,7 @@
   ;; (setq avy-keys '(?f ?j ?d ?k ?s ?l ?a ?\; ?g ?h)) ; F J D K S L A ; G H (HJKL-like)
   ;; (setq avy-timeout-seconds 0.3) ; avy-goto-char-timer 等待第二个字符的超时时间
   ;; (setq avy-highlight-first t)   ; 立即高亮第一个字符的匹配项
-  ;; (setq avy-style 'at-full)      ; 'at-full 会替换字符，'pre 在字符前显示，'overlay 用覆盖层
+  (setq avy-style 'at-full)
   )
 
 ;; For diminish

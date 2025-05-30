@@ -1,0 +1,7 @@
+[submodule "nana-emacs"]
+path = site-lisp/nano-emacs
+url = git@github.com:rougier/nano-emacs.git
+
+[submodule "org-modern-indent"]
+path = site-lisp/org-modern-indent
+url = git@github.com:jdtsmith/org-modern-indent.git

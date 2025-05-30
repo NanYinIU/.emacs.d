@@ -53,6 +53,7 @@
    )
   :config
   (setq org-capture-templates nil)
+  (setq org-startup-indented t)
   (add-to-list 'org-capture-templates
                '("i" "INBOX" entry
                  (file+headline inbox-dir "REFILE")
@@ -129,8 +130,9 @@
                                      "......"
                                      "-----------------------------------------------------"
                                      )))
+  ;;(message "Configuring Org Babel. load-language-alist is: %S" load-language-alist) ; For verification
   (org-babel-do-load-languages 'org-babel-load-languages load-language-alist)
-   (define-key org-mode-map (kbd "RET")
+  (define-key org-mode-map (kbd "RET")
                 'my-org/org-return)
   :hook (((org-babel-after-execute org-mode) . org-redisplay-inline-images) ; display image
          (org-indent-mode . (lambda()
@@ -140,7 +142,7 @@
                               (make-variable-buffer-local 'show-paren-mode)
                               (setq show-paren-mode nil)))
          (org-mode-hook . valign-mode)
-         (org-mode-hook . org-ident-mode)
+         (org-mode-hook . org-indent-mode)
          )
   :bind (
          ("C-c [" . org-mark-ring-goto)
@@ -208,7 +210,7 @@
 
                               ;; --- 标签样式 ---
                               ;; 使用更柔和的标签背景色，或者只改变前景色
-                              ;; (setq org-modern-tag-faces '((:foreground "dim gray" :weight 'semi-bold)))
+                              (setq org-modern-tag-faces '((:foreground "dim gray" :weight 'semi-bold)))
                               ;; 或者给标签加上边框/药丸形状 (需要主题或额外 face 定义支持良好)
                               ;; (setq org-modern-tag-faces '((:box (:line-width (-1 . -1) :color "gray" :style nil) :foreground "dim gray")))
 
@@ -217,12 +219,12 @@
                               (setq org-modern-list '((43 . "· ")  ; + (plus)
                                                       (45 . "– ")  ; - (hyphen)
                                                       (42 . "• "))) ; * (asterisk)
-
+                              (setq org-pretty-entities t)
                               (setq org-modern-horizontal-rule "┈┈┈┈┈┈") ;; 虚线
 
                               ;; --- 表格 ---
                               ;; 启用更现代的表格渲染 (使用 box-drawing 字符)
-                              (setq org-modern-table 'modern)
+                              ;;(setq org-modern-table 'modern)
 
                               ;; --- 元数据行 (如 #+TITLE, #+AUTHOR) ---
                               (setq org-modern-keyword-foreground "DarkGoldenrod") ;; 改变元数据关键字的颜色
@@ -240,6 +242,15 @@
   ;;  '(org-modern-tag ((t (:foreground "blue" :weight 'bold)))))
   (setq org-modern-todo t) ; 启用 TODO 关键字的现代化显示
   (setq org-modern-priority t) ; 启用优先级的现代化显示 (例如 [#A] -> Ⓐ)
+  )
+
+(use-package org-modern-indent
+  ;;:after org-modern
+  :load-path "site-lisp/org-modern-indent"
+  :commands org-modern-indent-mode
+  :hook (org-mode . org-modern-indent-mode)
+  ;;:config ; add late to hook
+  ;;(add-hook 'org-mode-hook #'org-modern-indent-mode 90)
   )
 
 ;; For org-roam

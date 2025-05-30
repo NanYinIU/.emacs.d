@@ -66,6 +66,16 @@
   (doom-modeline-icon t)
   (doom-modeline-nerd-font t))
 
+(use-package keycast
+  :ensure t
+  :init
+  ;; Option 1: Try 't' to append after the last element of mode-line-format.
+  ;;(setq keycast-mode-line-insert-after t)
+  (setq keycast-mode-line-insert-after 'doom-modeline-misc-info)
+  :config
+  (keycast-mode-line-mode 1))
+
+
 ;; For doom-themes
 (use-package doom-themes
   :ensure t
@@ -92,7 +102,14 @@
 (use-package moe-theme
   :ensure t
   :init
-  (load-theme 'moe-light t))
+  ;;(load-theme 'moe-light t)
+  )
+
+(use-package modus-themes
+  :ensure t
+  :init
+  (load-theme 'modus-operandi-tinted t)
+)
 
 ;; For nano-local-system (local N Λ N O system from site-lisp/nano-emacs/)
 (use-package nano-local-system
@@ -223,6 +240,7 @@
   (setq ns-use-thin-smoothing t)
   ;; Don't open a file in a new frame
   (setq ns-pop-up-frames nil))
+
 
 (provide 'setup-ui)
 ;;; setup-ui.el ends here
