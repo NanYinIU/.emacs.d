@@ -109,6 +109,17 @@
   :ensure t
   :init
   (load-theme 'modus-operandi-tinted t)
+  :config
+  (setq modus-themes-bold-constructs t)
+  (setq modus-themes-prompts '(bold italic))
+  (setq modus-themes-completions
+      '((matches . (extrabold underline))
+        (selection . (semibold italic))))
+
+  (setq modus-themes-headings
+      '((1 . t)           ; keep the default style
+        (2 . (semibold 1.2))
+        (t . (rainbow)))) ; style for all other headings
 )
 
 ;; For nano-local-system (local N Λ N O system from site-lisp/nano-emacs/)
