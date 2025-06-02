@@ -68,12 +68,12 @@
                '("tp" "Personal Task" entry
                  (file+headline todo-dir "Personal")
                  "\n* TODO %^{任务名} :personal: \n%u\n"))
-  (setq org-agenda-files (list
-                          (expand-file-name "TODOs.org" centaur-org-directory)
-                          (expand-file-name "INBOX.org" centaur-org-directory)
-                          (expand-file-name "ARCHIVED.org" centaur-org-directory)
-                          (expand-file-name "daily" centaur-org-directory)
-                          ))
+;;  (setq org-agenda-files (list
+;;                          (expand-file-name "TODOs.org" centaur-org-directory)
+;;                          (expand-file-name "INBOX.org" centaur-org-directory)
+;;                          (expand-file-name "ARCHIVED.org" centaur-org-directory)
+;;                          (expand-file-name "daily" centaur-org-directory)
+;;                          ))
 ;;  (setq org-agenda-files
 ;;        (directory-files-recursively centaur-org-directory "\\.org$"))
 
@@ -149,8 +149,9 @@
          )
   :bind (
          ("C-c [" . org-mark-ring-goto)
-         ("C-c a" . org-agenda)
-         ("C-c z" . org-capture))
+         ("C-c a" . org-agenda-list)
+         ;;         ("C-c z" . org-capture)
+         )
   )
 
 ;; For org-appear
@@ -295,9 +296,9 @@
                               "#+title:${title}\n#+filetags: :note:\n\n")
            :unnarrowed t)
 
-          ("w" "Work Document" plain "%?"
+          ("w" "Work Document" entry "* %^{description}\n:PROPERTIES:\n:CATEGORY: %^{Category}\n:END:\n\n%^{Link}\n\n%? "
            :target (file+head "work/${slug}-%<%Y%m%d%H%M%S>.org"
-                              "#+title:${title}\n#+filetags: :work:\n\n")
+                              "#+title:${title}\n#+filetags: %^G \n\n")
            :unnarrowed t)
 
           ("l" "LeetCode")
@@ -488,7 +489,7 @@ tasks."
          (eq major-mode 'org-mode)
          (string-suffix-p "org" buffer-file-name)
          (string-prefix-p
-          (expand-file-name (file-name-as-directory vulpea-directory))
+          (expand-file-name (file-name-as-directory org-roam-directory))
           (file-name-directory buffer-file-name))))
 
   (defun vulpea-project-files ()
@@ -597,14 +598,24 @@ If nil it defaults to `split-string-default-separators', normally
     (when (re-search-forward (concat "\\(^#\\+" name ":.*\n?\\)")
                              (point-max) t)
       (replace-match ""))))
+  ;; org dailies capture
 
+  (setq org-roam-dailies-capture-templates
+      '(("d" "Journal" entry "* %? \n:CREATED: %T\n"
+         :if-new (file+head+olp "%<%Y-%m-%d>.org"
+	  	  	        "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n"
+		  	        ("Journal")))
+        ("m" "Most Important Thing" entry "* TODO [#A] %? :mit: \n SCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"+0d\"))"
+         :if-new (file+head+olp "%<%Y-%m-%d>.org"
+			        "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n"
+			        ("Most Important Thing(s)")))))
   :bind (("C-c o l" . org-roam-buffer-toggle)
          ("C-c o f" . org-roam-node-find)
          ("C-c o g" . org-roam-graph)
          ("C-c o i" . org-roam-node-insert)
-         ("C-c o c" . org-roam-capture)
-         ("C-c o j" . org-roam-dailies-capture-today)
-         ("C-c o t" . org-roam-dailies-goto-today)
+         ("C-c t" . org-roam-dailies-goto-today)
+         ("C-c C" . org-roam-capture)
+         ("C-c c" . org-roam-dailies-capture-today)
          )
   )
 
