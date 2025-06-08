@@ -8,6 +8,12 @@
 (require 'init-const)
 (require 'init-funcs)
 
+(setq frame-resize-pixelwise t)
+(add-to-list 'default-frame-alist '(undecorated-round . t))
+
+(tool-bar-mode 1)
+(tool-bar-mode 0)
+
 ;; cursor type set hbar
 (setq-default cursor-type 'bar)
 
@@ -108,7 +114,7 @@
 (use-package modus-themes
   :ensure t
   :init
-  (load-theme 'modus-operandi-tinted t)
+  (load-theme 'modus-vivendi t)
   :config
   (setq modus-themes-bold-constructs t)
   (setq modus-themes-prompts '(bold italic))
@@ -185,9 +191,9 @@
                2)))))
 
 ;; For ultra-scroll
-(use-package ultra-scroll
-  :ensure t
-  :hook (after-init . ultra-scroll-mode))
+;;(use-package ultra-scroll
+;;  :ensure t
+;;  :hook (after-init . ultra-scroll-mode))
 
 ;; For which-key
 (use-package which-key
@@ -208,8 +214,8 @@
   (add-to-list 'which-key-replacement-alist '(("SPC" . nil) . ("␣" . nil))))
 
 ;; For window-tool-bar
-(use-package window-tool-bar
-  :ensure t)
+;;(use-package window-tool-bar
+;;  :ensure t)
 
 ;;; Font settings
 (defun +my/better-font()
@@ -222,7 +228,7 @@
             (charset '(kana han symbol cjk-misc bopomofo))
           (set-fontset-font (frame-parameter nil 'font)
                             charset
-                            (font-spec :family "Sarasa Mono SC" :size 13))))))
+                            (font-spec :family "Maple Mono NL" :size 13))))))
 
 (defun +my|init-font(frame)
   "Initialize font for FRAME."

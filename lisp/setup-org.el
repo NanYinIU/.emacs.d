@@ -511,6 +511,7 @@ tasks."
   (add-hook 'find-file-hook #'vulpea-project-update-tag)
   (add-hook 'before-save-hook #'vulpea-project-update-tag)
 
+  (advice-add 'org-agenda-list :before #'vulpea-agenda-files-update)
   (advice-add 'org-agenda :before #'vulpea-agenda-files-update)
   (advice-add 'org-todo-list :before #'vulpea-agenda-files-update)
 
@@ -601,7 +602,7 @@ If nil it defaults to `split-string-default-separators', normally
   ;; org dailies capture
 
   (setq org-roam-dailies-capture-templates
-      '(("d" "Journal" entry "* %? \n:CREATED: %T\n"
+      '(("d" "Journal" entry "* %? %T\n"
          :if-new (file+head+olp "%<%Y-%m-%d>.org"
 	  	  	        "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n"
 		  	        ("Journal")))
