@@ -104,17 +104,30 @@
 (use-package mini-frame
   :ensure t)
 
-;; For moe-theme
-(use-package moe-theme
+;; For ef-theme
+(use-package ef-themes
   :ensure t
   :init
-  ;;(load-theme 'moe-light t)
+  (load-theme 'ef-dream :no-confirm)
+  :config
+  (setq ef-themes-mixed-fonts t
+        ef-themes-variable-pitch-ui t)
+
+  (setq ef-themes-headings
+      '((1 light variable-pitch 1.2)
+        (2 regular 1.1)
+        (3 1.1)
+        (agenda-date 1.3)
+        (agenda-structure variable-pitch light 1.5)
+        (t variable-pitch)))
+  (setq org-modern-timestamp nil)
+
   )
 
 (use-package modus-themes
   :ensure t
-  :init
-  (load-theme 'modus-vivendi t)
+  ;;:init
+  ;;(load-theme 'modus-vivendi t)
   :config
   (setq modus-themes-bold-constructs t)
   (setq modus-themes-prompts '(bold italic))
@@ -190,45 +203,18 @@
                   (* 2 (plist-get info :font-height)))
                2)))))
 
-;; For ultra-scroll
-;;(use-package ultra-scroll
-;;  :ensure t
-;;  :hook (after-init . ultra-scroll-mode))
-
-;; For which-key
-(use-package which-key
-  :ensure t
-  :init
-  (setq which-key-idle-delay 0.5)
-  (setq which-key-idle-secondary-delay 0.05)
-  (setq which-key-popup-type 'minibuffer)
-  (setq which-key-sort-order #'which-key-key-order)
-  (setq which-key-add-keymap-based-replacements t)
-  :config
-  (which-key-mode 1)
-  ;; Custom key descriptions
-  (which-key-add-key-based-replacements "C-c o" "Org/Org Roam")
-  (add-to-list 'which-key-replacement-alist '(("TAB" . nil) . ("↹" . nil)))
-  (add-to-list 'which-key-replacement-alist '(("RET" . nil) . ("⏎" . nil)))
-  (add-to-list 'which-key-replacement-alist '(("DEL" . nil) . ("⇤" . nil)))
-  (add-to-list 'which-key-replacement-alist '(("SPC" . nil) . ("␣" . nil))))
-
-;; For window-tool-bar
-;;(use-package window-tool-bar
-;;  :ensure t)
-
 ;;; Font settings
 (defun +my/better-font()
   "Set up fonts for UI."
   (interactive)
   (if (display-graphic-p)
       (progn
-        (set-face-attribute 'default nil :font "Maple Mono NL 13")
+        (set-face-attribute 'default nil :font "Zed Mono 13")
         (dolist
             (charset '(kana han symbol cjk-misc bopomofo))
           (set-fontset-font (frame-parameter nil 'font)
                             charset
-                            (font-spec :family "Maple Mono NL" :size 13))))))
+                            (font-spec :family "WenQuanyi Micro Hei" :size 13))))))
 
 (defun +my|init-font(frame)
   "Initialize font for FRAME."

@@ -90,8 +90,8 @@
   :ensure nil
   :hook (prog-mode . flymake-mode)
   :bind (("C-c f" . flymake-show-buffer-diagnostics))
-  :init 
-  (setq flymake-no-changes-timeout nil 
+  :init
+  (setq flymake-no-changes-timeout nil
         flymake-fringe-indicator-position 'right-fringe)
   :config
   (setq flymake-no-changes-timeout 0.5))

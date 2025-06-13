@@ -56,6 +56,7 @@
 (setq inhibit-compacting-font-caches t)                       ; Don't compact font caches during GC
 (setq word-wrap-by-category t)                                ; Optimize word wrapping for CJK text
 (setq sentence-end "\\([。！？]\\|……\\|[.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*") ; Define sentence end for CJK
+(setq ispell-dictionary "en_US")
 (setq sentence-end-double-space nil)                          ; No double space after sentence end
 (setq-default major-mode 'text-mode)
 (setq ring-bell-function 'ignore)

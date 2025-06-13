@@ -154,7 +154,7 @@
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read
         xref-show-xrefs-function #'xref-show-definitions-completing-read))
 
-;; For desktop - Session saving
+;; For desktop - Session savin
 (use-package desktop
   :ensure nil
   :init
@@ -163,11 +163,6 @@
         desktop-restore-eager 10
         desktop-load-locked-desktop 'ask)
   (desktop-save-mode 1))
-
-;; Assuming you have package.el initialized and MELPA added
-;; (require 'package)
-;; (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; (package-initialize)
 
 (use-package vterm
   :ensure t ; Ensures vterm is installed

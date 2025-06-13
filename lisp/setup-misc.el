@@ -20,4 +20,6 @@
 ;;  (setq youdao-dictionary-app-key "5f99312ee6462e1e")
 ;;  (setq youdao-dictionary-secret-key "g6u7hTZCpv4vYJ9PD5U0Rnr46N8kGZjl"))
 
+(setq eww-search-prefix "https://duckduckgo.com/?q=")
+
 (provide 'setup-misc)

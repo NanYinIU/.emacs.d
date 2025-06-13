@@ -24,6 +24,7 @@
       ;;  需要使用 js-json (json       . t)
       (java       . t)
       (shell      . t)
+      (mermaid    . t)
       (plantuml   . t))
     "Alist of org ob languages.")
   (setq inbox-dir (expand-file-name "INBOX.org" centaur-org-directory))
@@ -183,13 +184,13 @@
   )
 
 ;; For org-fancy-priorities
-(use-package org-fancy-priorities
-  :ensure t
-  :diminish
-  :hook (org-mode . org-fancy-priorities-mode)
-  :config
-  (setq org-fancy-priorities-list
-        '("🅰" "🅱" "🅲" "🅳" "🅴")))
+;;(use-package org-fancy-priorities
+;;  :ensure t
+;;  :diminish
+;;  :hook (org-mode . org-fancy-priorities-mode)
+;;  :config
+;;  (setq org-fancy-priorities-list
+;;        '("🅰" "🅱" "🅲" "🅳" "🅴")))
 
 ;; For org-modern
 (use-package org-modern
@@ -614,6 +615,7 @@ If nil it defaults to `split-string-default-separators', normally
          ("C-c o f" . org-roam-node-find)
          ("C-c o g" . org-roam-graph)
          ("C-c o i" . org-roam-node-insert)
+         ("C-c o t" . org-roam-dailies-goto-date)
          ("C-c t" . org-roam-dailies-goto-today)
          ("C-c C" . org-roam-capture)
          ("C-c c" . org-roam-dailies-capture-today)
@@ -638,6 +640,12 @@ If nil it defaults to `split-string-default-separators', normally
 (use-package toc-org
   :ensure t
   :hook (org-mode . toc-org-mode))
+
+(use-package ob-mermaid
+  :ensure t ; Ensure it's installed if not already
+  :config
+  (setq ob-mermaid-cli-path "/opt/homebrew/bin/mmdc")
+  )
 
 ;;============ Org Mode Group End ===============
 
