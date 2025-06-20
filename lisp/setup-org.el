@@ -145,7 +145,7 @@
                               ;; @see https://github.com/seagle0128/.emacs.d/issues/88
                               (make-variable-buffer-local 'show-paren-mode)
                               (setq show-paren-mode nil)))
-         (org-mode-hook . valign-mode)
+        ;; (org-mode-hook . valign-mode)
          (org-mode-hook . org-indent-mode)
          )
   :bind (
@@ -230,7 +230,7 @@
 
                               ;; --- 表格 ---
                               ;; 启用更现代的表格渲染 (使用 box-drawing 字符)
-                              ;;(setq org-modern-table 'modern)
+                              (setq org-modern-table -1)
 
                               ;; --- 元数据行 (如 #+TITLE, #+AUTHOR) ---
                               (setq org-modern-keyword-foreground "DarkGoldenrod") ;; 改变元数据关键字的颜色
@@ -289,17 +289,17 @@
         '(
           ("d" "default" plain "%?"
            :target (file+head "${slug}-%<%Y%m%d%H>.org"
-                              "#+title:${title}\n#+filetags:\n\n")
+                              "#+title:${title}\n#+filetags: :note:\n#+SETUPFILE: ~/.emacs.d/white_clean.theme\n\n")
            :unnarrowed t)
 
-          ("p" "Persional Note" plain "%?"
+          ("p" "Project Note" entry "* Metadata\n:PROPERTIES:\n:Status: Active\n:Deadline:\n:END:"
            :target (file+head "note/${slug}-%<%Y%m%d%H%M%S>.org"
-                              "#+title:${title}\n#+filetags: :note:\n\n")
+                              "#+title: P: ${title}\n#+category: Project\n#+filetags: :note:\n#+SETUPFILE: ~/.emacs.d/white_clean.theme\n\n")
            :unnarrowed t)
 
-          ("w" "Work Document" entry "* %^{description}\n:PROPERTIES:\n:CATEGORY: %^{Category}\n:END:\n\n%^{Link}\n\n%? "
+          ("w" "Work Document" entry "* Metadata\n:PROPERTIES:\n:Status: Active\n:END:\n\n%^{Link}\n\n%? "
            :target (file+head "work/${slug}-%<%Y%m%d%H%M%S>.org"
-                              "#+title:${title}\n#+filetags: %^G \n\n")
+                              "#+title: W: ${title}\n#+category: Project\n#+filetags: :vault:\n#+SETUPFILE: ~/.emacs.d/white_clean.theme\n\n")
            :unnarrowed t)
 
           ("l" "LeetCode")
@@ -611,7 +611,7 @@ If nil it defaults to `split-string-default-separators', normally
          :if-new (file+head+olp "%<%Y-%m-%d>.org"
 			        "#+title: %<%Y-%m-%d>\n#+filetags: %<:%Y:%B:>\n"
 			        ("Most Important Thing(s)")))))
-  :bind (("C-c o l" . org-roam-buffer-toggle)
+  :bind (("C-c o b" . org-roam-buffer-toggle)
          ("C-c o f" . org-roam-node-find)
          ("C-c o g" . org-roam-graph)
          ("C-c o i" . org-roam-node-insert)
@@ -647,6 +647,93 @@ If nil it defaults to `split-string-default-separators', normally
   (setq ob-mermaid-cli-path "/opt/homebrew/bin/mmdc")
   )
 
+(use-package org-web-tools
+  :ensure t)
+
+(use-package org-transclusion
+  :after org
+  :ensure t
+  :bind(("C-c o l" . org-transclusion-add)
+        )
+  )
+
+(use-package org-ql
+  :ensure t
+  :after org
+  :config
+  ;; 定义 org-ql 的搜索范围，与 agenda-files 保持一致
+;;  (setq org-ql-search-directories (file-expand-wildcards org-agenda-files))
+  (setq org-ql-search-directories-files (list org-roam-directory))
+
+  ;; 定义我们想要在 Sidebar 中看到的“视图”
+  (setq org-ql-views
+        '(
+
+          ("📅 Today's Agenda"
+           :query (or (deadline :on today) (scheduled :to today) (ts-active :on today))
+           ;;:sort '(priority)
+           :order-by 'deadline
+           )
+
+           ("🔥 Overdue Items"
+           :query (and (not (done))
+                     (or (scheduled :from "-7d" :to today)
+                         (deadline :from "-7d" :to today)
+                         ;;(timestamp :from "-7d" :to today)
+                         ))
+           :sort '(deadline scheduled))
+
+           ("⚡ Upcoming Agenda (7-Day)"
+             :query (and (todo)
+                     (or (scheduled :from today :to "+7d")
+                         (deadline :from today :to "+7d")))
+             :sort '(deadline scheduled))
+
+          ("🤔 Waiting For"
+           :query (tags "waiting")
+           :sort '(priority))
+
+          ("🚧 Blocked"
+           :query (tags "blocked"))
+
+          ("📂 Active Projects"
+           :query (and (level 1) (keyword "category" "Project")    ; 首先，它必须是个项目笔记
+             (property "Status" "Active"))    ; 其次，它的Status属性必须是Active
+           ;;:sort '(priority)
+           )
+
+          ("🧹 Orphaned Notes"
+           :query (and (not (link-count :from 1)) ; 没有出链
+             (not (link-count :to 1)))   ; 没有入链
+           ;;:sort '(title)
+           )
+          ))
+  )
+
+(use-package org-sidebar
+  :ensure t
+  :config
+  ;; 创建一个名为 "Dashboard" 的侧边栏配置
+  (setq org-sidebar-config
+        '((:name "Dashboard"
+           :panes
+           (;; 第一个窗格：显示我们的 QL 视图
+            (:name "⚡ My Views"
+             :type org-sidebar-ql
+             :include ("Today's Agenda" "Overdue Items" "⚡ Upcoming Agenda (7-Day)"))
+            ;; 第二个窗格：显示项目列表
+            (:name "📂 Projects"
+             :type org-sidebar-ql
+             :include ("Active Projects"))
+            ;; 第三个窗格：显示当前文件的目录树
+            (:name "📄 Current File"
+             :type org-sidebar-tree)
+            ))))
+  ;; 设置默认侧边栏
+  (setq org-sidebar-default-config-name "Dashboard"))
+
+;; 绑定一个方便的快捷键来开关侧边栏，F8 是个不错的选择
+(global-set-key (kbd "<f8>") #'org-sidebar-toggle)
 ;;============ Org Mode Group End ===============
 
 (provide 'setup-org)
