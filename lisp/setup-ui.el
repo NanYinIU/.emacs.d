@@ -8,11 +8,9 @@
 (require 'init-const)
 (require 'init-funcs)
 
-(setq frame-resize-pixelwise t)
+;;(setq frame-resize-pixelwise t)
+;; Emacs plus 28+ no title bar config
 (add-to-list 'default-frame-alist '(undecorated-round . t))
-
-(tool-bar-mode 1)
-(tool-bar-mode 0)
 
 ;; cursor type set hbar
 (setq-default cursor-type 'bar)
@@ -68,7 +66,7 @@
   :init
   (doom-modeline-mode 1)
   :custom
-  (doom-modeline-icon-font-size 14)
+  (doom-modeline-icon-font-size 13)
   (doom-modeline-icon t)
   (doom-modeline-nerd-font t))
 
@@ -209,12 +207,17 @@
   (interactive)
   (if (display-graphic-p)
       (progn
-        (set-face-attribute 'default nil :font "Zed Mono 13")
+        ;; Fixedsys Excelsior is great. Input Serif Condensed 12
+        ;; Fantasque Sans Mono
+        ;; 中文字体
+        (set-face-attribute 'default nil :font "Fantasque Sans Mono 13")
         (dolist
             (charset '(kana han symbol cjk-misc bopomofo))
           (set-fontset-font (frame-parameter nil 'font)
                             charset
-                            (font-spec :family "WenQuanyi Micro Hei" :size 13))))))
+                            ;; WenQuanyi Micro Hei
+                            (font-spec :family "WenQuanYi Micro Hei Mono" :size 12)))))
+  )
 
 (defun +my|init-font(frame)
   "Initialize font for FRAME."

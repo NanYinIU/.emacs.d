@@ -123,6 +123,29 @@
   (setq package-enable-at-startup nil)
   (package-initialize))
 
+;; Native compilation settings
+(when (and (fboundp 'native-comp-available-p)
+           (native-comp-available-p))
+  ;; Silence compiler warnings as they can be noisy
+  (setq native-comp-async-report-warnings-errors nil)
+
+  ;; Set the right directory to store the cache
+  (add-to-list 'native-comp-eln-load-path
+               (expand-file-name "eln-cache/" user-emacs-directory))
+
+  ;; Make native compilation happens asynchronously
+  (setq native-comp-deferred-compilation t)
+
+  ;; Limit the number of compilation jobs
+  (setq native-comp-async-jobs-number 2)
+
+  ;; Don't show compilation warnings in echo area
+  (setq native-comp-warning-on-missing-source nil))
+
+;; step 1: Start the Emacs Server
+(server-start)
+;; step 2: use alias e='emacsclient -c -n' to alias emacsclient open files
+
 ;; Load modules in proper order
 (require 'init-const)       ; System constants
 (require 'init-funcs)       ; Custom general functions

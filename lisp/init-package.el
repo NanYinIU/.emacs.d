@@ -38,6 +38,12 @@
 
 (benchmark-init/activate)
 
+(use-package exec-path-from-shell
+  :ensure t
+  :init
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+
 ;; Update packages
 (unless (fboundp 'package-upgrade-all)
   (use-package auto-package-update
