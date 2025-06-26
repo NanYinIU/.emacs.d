@@ -106,6 +106,7 @@
 (use-package ef-themes
   :ensure t
   :init
+  ;; ef-dream or ef-day
   (load-theme 'ef-dream :no-confirm)
   :config
   (setq ef-themes-mixed-fonts t
@@ -210,13 +211,13 @@
         ;; Fixedsys Excelsior is great. Input Serif Condensed 12
         ;; Fantasque Sans Mono
         ;; 中文字体
-        (set-face-attribute 'default nil :font "Fantasque Sans Mono 13")
+        (set-face-attribute 'default nil :font "Fantasque Sans Mono 14")
         (dolist
             (charset '(kana han symbol cjk-misc bopomofo))
           (set-fontset-font (frame-parameter nil 'font)
                             charset
                             ;; WenQuanyi Micro Hei
-                            (font-spec :family "WenQuanYi Micro Hei Mono" :size 12)))))
+                            (font-spec :family "LXGW WenKai Mono" :size 13)))))
   )
 
 (defun +my|init-font(frame)

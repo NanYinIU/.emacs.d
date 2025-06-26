@@ -18,3 +18,10 @@ places
 .emacs.desktop
 savehist
 saveplace
+eln-cache
+tramp
+url/cookies
+*.desktop*
+savehist
+saveplace
+transient/history.el

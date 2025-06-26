@@ -54,12 +54,16 @@
 #+HTML_HEAD: h1, h2, h3, h4, h5 {
 #+HTML_HEAD:     position:  relative;
 #+HTML_HEAD:     margin:  30px 0 20px;
-#+HTML_HEAD:     font-size:  18px;
 #+HTML_HEAD:     font-weight:  bold;
 #+HTML_HEAD:     line-height:  1.1;
 #+HTML_HEAD:     color:  #111;
 #+HTML_HEAD:     text-rendering:  optimizeLegibility;
 #+HTML_HEAD: }
+#+HTML_HEAD: h1 { font-size: 2.2em; }
+#+HTML_HEAD: h2 { font-size: 1.8em; }
+#+HTML_HEAD: h3 { font-size: 1.5em; }
+#+HTML_HEAD: h4 { font-size: 1.2em; }
+#+HTML_HEAD: h5 { font-size: 1em; }
 #+HTML_HEAD: h1:before, h2:before, h3:before, h4:before , h5:before  {
 #+HTML_HEAD:     position:  absolute;
 #+HTML_HEAD:     top:  auto;
@@ -72,19 +76,19 @@
 #+HTML_HEAD: }
 #+HTML_HEAD: h2:before {
 #+HTML_HEAD:     content:  "*";
-#+HTML_HEAD:     left:  -2em;
+#+HTML_HEAD:     left:  -1.5em;
 #+HTML_HEAD: }
 #+HTML_HEAD: h3:before {
 #+HTML_HEAD:     content:  "**";
-#+HTML_HEAD:     left:  -2.5em;
+#+HTML_HEAD:     left:  -2em;
 #+HTML_HEAD: }
 #+HTML_HEAD: h4:before {
 #+HTML_HEAD:     content:  "***";
-#+HTML_HEAD:     left:  -3em;
+#+HTML_HEAD:     left:  -2.5em;
 #+HTML_HEAD: }
 #+HTML_HEAD: h5:before {
 #+HTML_HEAD:     content:  "****";
-#+HTML_HEAD:     left:  -3.5em;
+#+HTML_HEAD:     left:  -3em;
 #+HTML_HEAD: }
 #+HTML_HEAD: i, em, b, strong {
 #+HTML_HEAD:     padding-left:  .1em;
