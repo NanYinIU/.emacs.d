@@ -10,7 +10,7 @@
 
 ;;(setq frame-resize-pixelwise t)
 ;; Emacs plus 28+ no title bar config
-(add-to-list 'default-frame-alist '(undecorated-round . t))
+;;(add-to-list 'default-frame-alist '(undecorated-round . t))
 
 ;; cursor type set hbar
 (setq-default cursor-type 'bar)
@@ -105,9 +105,9 @@
 ;; For ef-theme
 (use-package ef-themes
   :ensure t
-  :init
+  ;;:init
   ;; ef-dream or ef-day
-  (load-theme 'ef-dream :no-confirm)
+  ;;(load-theme 'ef-day :no-confirm)
   :config
   (setq ef-themes-mixed-fonts t
         ef-themes-variable-pitch-ui t)
@@ -125,8 +125,8 @@
 
 (use-package modus-themes
   :ensure t
-  ;;:init
-  ;;(load-theme 'modus-vivendi t)
+  :init
+  (load-theme 'modus-operandi-tinted t)
   :config
   (setq modus-themes-bold-constructs t)
   (setq modus-themes-prompts '(bold italic))

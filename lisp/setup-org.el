@@ -1,4 +1,5 @@
 ;;; setup-org.el --- Org mode and its ecosystem -*- lexical-binding: t; -*-
+(require 'org-protocol)
 
 ;;============ Org Mode Group Start ===============
 ;; For org (Core Org mode configuration)
@@ -69,6 +70,10 @@
                '("tp" "Personal Task" entry
                  (file+headline todo-dir "Personal")
                  "\n* TODO %^{任务名} :personal: \n%u\n"))
+  (add-to-list 'org-capture-templates
+               '("w" "Web Capture" entry
+                 (file+headline inbox-dir "Web")
+                 "* %a\n%?%i"))
 ;;  (setq org-agenda-files (list
 ;;                          (expand-file-name "TODOs.org" centaur-org-directory)
 ;;                          (expand-file-name "INBOX.org" centaur-org-directory)
@@ -223,15 +228,25 @@
 
                               ;; --- 列表项目符号 ---
                               ;; 自定义无序列表的项目符号
-                              (setq org-modern-list '((43 . "· ")  ; + (plus)
-                                                      (45 . "– ")  ; - (hyphen)
-                                                      (42 . "• "))) ; * (asterisk)
+                              ;;(setq org-modern-list '((43 . "· ")  ; + (plus)
+                              ;;                        (45 . "– ")  ; - (hyphen)
+                              ;;                        (42 . "• "))) ; * (asterisk)
+
+                              (setq org-modern-list
+                                    '((45 . "❯ ")  ; When you type '-', display '❯ '
+                                      (43 . "› ")  ; When you type '+', display '› '
+                                      (42 . "» "))) ; When you type '*', display '» '
                               (setq org-pretty-entities t)
                               (setq org-modern-horizontal-rule "┈┈┈┈┈┈") ;; 虚线
 
+                                ;; Set custom checkbox styles
+                              (setq org-modern-checkbox
+                                    '(("☐" . "○")
+                                      ("☑" . "●")
+                                      ("[-]" . "◐")))
                               ;; --- 表格 ---
                               ;; 启用更现代的表格渲染 (使用 box-drawing 字符)
-                              (setq org-modern-table -1)
+                              (setq org-modern-table t)
 
                               ;; --- 元数据行 (如 #+TITLE, #+AUTHOR) ---
                               (setq org-modern-keyword-foreground "DarkGoldenrod") ;; 改变元数据关键字的颜色
@@ -654,8 +669,17 @@ If nil it defaults to `split-string-default-separators', normally
 (use-package org-transclusion
   :after org
   :ensure t
+  :config
+  (setq org-transclusion-enable-async-http t)
+  (add-to-list 'org-transclusion-extensions 'org-transclusion-indent-mode)
   :bind(("C-c o l" . org-transclusion-add)
         )
+  )
+
+(use-package org-transclusion-http
+  :ensure t
+  :config
+  (add-to-list 'org-transclusion-extensions 'org-transclusion-http)
   )
 
 (use-package org-ql
