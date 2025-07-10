@@ -18,6 +18,7 @@
 ;; Add your API keys to ~/.authinfo
 (use-package gptel
   :config
+  ;;(setq gptel-proxy "http://127.0.0.1:7890")
   (setq gptel-provider 'openrouter)
   (setq gptel-default-mode 'org-mode)
   (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "@user\n")
@@ -40,7 +41,8 @@
   :stream t
   :key (get-authinfo-password "openrouter.ai")                 ;can be a function that returns the key
   :models '(qwen/qwen-2.5-coder-32b-instruct
-            deepseek/deepseek-chat-v3-0324))
+            deepseek/deepseek-chat-v3-0324
+            deepseek/deepseek-r1-0528))
 
   (setq
    gptel-model 'gemini-2.0-flash

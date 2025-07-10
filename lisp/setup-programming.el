@@ -36,8 +36,6 @@
                '(rust-ts-mode . ("rust-analyzer")))
   (add-to-list 'eglot-server-programs
                '(rust-mode . ("rust-analyzer")))
-  (add-to-list 'eglot-server-programs
-               '((python-mode python-ts-mode) . ("pyright-langserver" "--stdio")))
 
   ;; Java JDT LS configuration
   (let* (
@@ -143,13 +141,7 @@
   :hook (protobuf-mode . (lambda ()
                            "Set up Protobuf's imenu generic expressions."
                            (setq imenu-generic-expression
-                                 '((nil "^[[:space:]]*\\(message\\|service\\|enum\\)[[:space:]]+\\([[:alnum:]]+\\)" 2))))))
-
-;; For python
-(use-package python
-  :ensure t
-  :mode ("\\.py\\'" . python-mode)
-  :interpreter ("python" . python-mode))
+                                 '((nil "^[[:space:]]*\(message\|service\|enum\)[[:space:]]+\([[:alnum:]]+\)" 2))))))
 
 ;; For quickrun - Run code snippets
 (use-package quickrun

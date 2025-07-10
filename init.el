@@ -162,6 +162,7 @@
 (require 'setup-project)    ; Project management
 (require 'setup-misc)       ; Miscellaneous settings
 (require 'setup-ai)
+(require 'setup-python)     ; Enhanced Python support
 
 ;; Variables configured via the custom UI go in custom.el
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
