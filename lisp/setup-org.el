@@ -415,9 +415,78 @@
 
     ;; 如果不是 Org Roam 目录下的 .org 文件，则直接调用原始函数
     (apply orig-fun args)))
-  (with-eval-after-load 'doom-modeline
-    (advice-add 'doom-modeline-buffer-file-name
-                :around #'my-doom-modeline-roam-aware-buffer-file-name))
+  ;; Doom-modeline advice (commented out since you're using default modeline)
+  ;; (with-eval-after-load 'doom-modeline
+  ;;   (advice-add 'doom-modeline-buffer-file-name
+  ;;               :around #'my-doom-modeline-roam-aware-buffer-file-name))
+
+  ;; Standalone function for default modeline
+  (defun my-roam-aware-buffer-name ()
+    "Return a formatted buffer name for Org Roam files, or default buffer name for others."
+    (if (and (boundp 'org-roam-directory)
+             org-roam-directory
+             (stringp buffer-file-name)
+             (require 's nil 'noerror)
+             (s-starts-with-p (file-truename org-roam-directory) (file-truename buffer-file-name))
+             (s-ends-with-p ".org" buffer-file-name t))
+
+        ;; Process Org Roam files
+        (let* ((filename (file-name-nondirectory buffer-file-name))
+               (name-part (file-name-sans-extension filename))
+               (name-part-spaced (subst-char-in-string ?_ ?\s name-part))
+               (icon "")
+               (display-string nil))
+
+          (cond
+           ;; Daily files: "2023-01-01" or "20230101"
+           ((string-match "^\\([0-9]\\{4\\}\\)[-_]?\\([0-9]\\{2\\}\\)[-_]?\\([0-9]\\{2\\}\\)$" name-part-spaced)
+            (let ((year (match-string 1 name-part-spaced))
+                  (month (match-string 2 name-part-spaced))
+                  (day (match-string 3 name-part-spaced)))
+              (setq display-string (format "%s%s-%s-%s" icon year month day))))
+
+           ;; Title-Date format: "我的笔记-20230101120000"
+           ((string-match "^\\(.*\\)-\\([0-9]\\{4\\}\\)\\([0-9]\\{2\\}\\)\\([0-9]\\{2\\}\\)[0-9]*$" name-part-spaced)
+            (let ((title-part (s-trim (match-string 1 name-part-spaced)))
+                  (year  (match-string 2 name-part-spaced))
+                  (month (match-string 3 name-part-spaced))
+                  (day   (match-string 4 name-part-spaced)))
+              (if (not (s-blank? title-part))
+                  (setq display-string (format "%s(%s%s-%s-%s)" title-part icon year month day)))))
+
+           ;; Date-Title format: "20230101120000-我的笔记"
+           ((string-match "^\\([0-9]\\{4\\}\\)\\([0-9]\\{2\\}\\)\\([0-9]\\{2\\}\\)[0-9]*-\\(.*\\)$" name-part-spaced)
+            (let ((year (match-string 1 name-part-spaced))
+                  (month (match-string 2 name-part-spaced))
+                  (day (match-string 3 name-part-spaced))
+                  (title-part (s-trim (match-string 4 name-part-spaced))))
+              (if (not (s-blank? title-part))
+                  (setq display-string (format "%s(%s-%s-%s) %s" icon year month day title-part))
+                (setq display-string (format "%s(%s-%s-%s)" icon year month day))))))
+
+          ;; Return formatted string or fallback to filename
+          (or display-string name-part-spaced))
+
+      ;; For non-Roam files, return buffer name
+      (buffer-name)))
+
+  ;; Custom modeline format using the roam-aware function
+  (defun my-custom-modeline-buffer-identification ()
+    "Custom buffer identification for modeline with Org Roam awareness."
+    (propertize (my-roam-aware-buffer-name)
+                'face 'mode-line-buffer-id
+                'help-echo "Buffer name
+\
+mouse-1: Previous buffer\nmouse-3: Next buffer"
+                'mouse-face 'mode-line-highlight
+                'local-map (let ((map (make-sparse-keymap)))
+                            (define-key map [mode-line mouse-1] 'mode-line-previous-buffer)
+                            (define-key map [mode-line mouse-3] 'mode-line-next-buffer)
+                            map)))
+
+  ;; Set the custom modeline format
+  (setq-default mode-line-buffer-identification
+                '(:eval (my-custom-modeline-buffer-identification)))
   (add-to-list 'display-buffer-alist
                    '("\\*org-roam\\*"
                      (display-buffer-in-side-window)
