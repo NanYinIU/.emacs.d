@@ -128,6 +128,12 @@
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
+(defun soph/take-me-home ()
+  (interactive)
+  (if (looking-back "/" nil)
+      (progn (call-interactively 'delete-minibuffer-contents) (insert "~/"))
+    (call-interactively 'self-insert-command)))
+
 ;; For vertico
 (use-package vertico
   :ensure t
@@ -139,6 +145,7 @@
   :config
   (define-key vertico-map (kbd "C-j") #'vertico-next)
   (define-key vertico-map (kbd "C-k") #'vertico-previous)
+  (define-key vertico-map (kbd "~") #'soph/take-me-home)
   )
 
 (provide 'setup-completion)

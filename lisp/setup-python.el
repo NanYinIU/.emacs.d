@@ -3,19 +3,16 @@
 (use-package pyenv-mode
   :ensure t
   :hook (python-ts-mode . pyenv-mode)
-  :config
-  ;; Set the desired pyenv virtual environment
-  (setq pyenv-mode-virtualenv "nvim_py3_venv")
-  
-  ;; Ensure pyenv-mode sets the interpreter for other packages to use
-  (setq python-shell-interpreter (concat (pyenv-root) "/versions/" pyenv-mode-virtualenv "/bin/python")))
+  :init
+  (setenv "WORKON_HOME" "~/.pyenv/versions")
+)
 
 (use-package python
   :ensure t
   :mode ("\\.py\\'" . python-ts-mode)
   :interpreter ("python3" . python-ts-mode)
-  :hook (python-ts-mode . eglot-ensure)
   :config
+  (setq python-shell-interpreter "~/.virtualenvs/nvim_py3_venv/bin/python")
   ;; Keybindings for python-ts-mode
   (define-key python-ts-mode-map (kbd "C-c C-r") 'python-shell-send-region)
   (define-key python-ts-mode-map (kbd "C-c C-c") 'python-shell-send-buffer)

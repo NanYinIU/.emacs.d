@@ -74,10 +74,10 @@
 
 (setq-default mode-line-format
   '("%e"
-	(:propertize " " display (raise +0.2)) ;; Top padding
-	(:propertize " " display (raise -0.2)) ;; Bottom padding
+	(:propertize " " display (raise +0.1)) ;; Top padding
+	(:propertize " " display (raise -0.1)) ;; Bottom padding
 
-	(:propertize "  " face font-lock-comment-face)
+	(:propertize " " face font-lock-comment-face)
 	mode-line-frame-identification
 	mode-line-buffer-identification
 

@@ -33,9 +33,21 @@
 
   ;; Server configurations
   (add-to-list 'eglot-server-programs
+               `(python-ts-mode . ("~/.virtualenvs/nvim_py3_venv/bin/python" "-m" "pylsp")))
+  (add-to-list 'eglot-server-programs
                '(rust-ts-mode . ("rust-analyzer")))
   (add-to-list 'eglot-server-programs
                '(rust-mode . ("rust-analyzer")))
+  (setq-default eglot-workspace-configuration
+    `((:pylsp .
+              (:plugins
+               (:jedi_completion (:include_params t
+                                  :fuzzy t)
+                :jedi (:environment "/Users/gaoguoxing/.virtualenvs/nvim_py3_venv")
+                ;; :flake8 (:enabled t)
+                :black (:enabled t)
+                :rope_autoimport (:enabled t
+                                  :python_path "/Users/gaoguoxing/.virtualenvs/nvim_py3_venv"))))))
 
   ;; Java JDT LS configuration
   (let* (
@@ -214,6 +226,13 @@
 (use-package yasnippet-snippets
   :ensure t
   :after yasnippet)
+
+(use-package leetcode
+  :ensure t
+  :config
+  (setq leetcode-prefer-language "java")
+  (setq leetcode-prefer-sql "mysql")
+  (setq leetcode-directory "~/leetcode"))
 
 (provide 'setup-programming)
 ;;; setup-programming.el ends here

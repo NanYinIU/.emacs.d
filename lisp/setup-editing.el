@@ -34,6 +34,16 @@
   :diminish
   :hook (after-init . editorconfig-mode))
 
+(use-package move-dup
+  :bind (:map custom-bindings-map
+              (("C-M-<up>"    . move-dup-move-lines-up)
+               ("C-M-<down>"  . move-dup-move-lines-down)
+               ;;("C-M-<left>"  . move-dup-move-lines-up)
+               ;;("C-M-<right>" . move-dup-move-lines-down)
+               ("M-W"         . move-dup-duplicate-down))))
+
+;;(define-key custom-bindings-map (kbd "C-S-k") 'kill-whole-line)r
+
 ;; For expand-region
 (use-package expand-region
   :ensure t

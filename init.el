@@ -158,11 +158,11 @@
 (require 'setup-completion) ; Completion frameworks
 (require 'setup-editing)    ; Editing tools and enhancements
 (require 'setup-org)        ; Org-mode configuration
+(require 'setup-python)     ; Enhanced Python support
 (require 'setup-programming) ; Programming language support
 (require 'setup-project)    ; Project management
 (require 'setup-misc)       ; Miscellaneous settings
 (require 'setup-ai)
-(require 'setup-python)     ; Enhanced Python support
 
 ;; Variables configured via the custom UI go in custom.el
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))

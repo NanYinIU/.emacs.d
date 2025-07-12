@@ -232,10 +232,10 @@
                               ;;                        (45 . "– ")  ; - (hyphen)
                               ;;                        (42 . "• "))) ; * (asterisk)
 
-                              (setq org-modern-list
-                                    '((45 . "❯ ")  ; When you type '-', display '❯ '
-                                      (43 . "› ")  ; When you type '+', display '› '
-                                      (42 . "» "))) ; When you type '*', display '» '
+                              ;;(setq org-modern-list
+                              ;;      '((45 . "❯ ")  ; When you type '-', display '❯ '
+                              ;;        (43 . "› ")  ; When you type '+', display '› '
+                              ;;        (42 . "» "))) ; When you type '*', display '» '
                               (setq org-pretty-entities t)
                               (setq org-modern-horizontal-rule "┈┈┈┈┈┈") ;; 虚线
 

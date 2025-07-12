@@ -10,6 +10,10 @@
   (setq git-rebase-autosquash t)
   )
 
+(use-package diff-hl
+  :config
+  (global-diff-hl-mode))
+
 ;; For persp-mode (perspective.el, for treemacs-persp)
 (use-package persp-mode
   :ensure t
