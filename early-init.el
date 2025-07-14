@@ -34,9 +34,20 @@
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(vertical-scroll-bars) default-frame-alist)
 ;;(push '(undecorated-round . 0) default-frame-alist)
+;; Emacs plus 28+ no title bar config
+(add-to-list 'default-frame-alist '(undecorated-round . t))
 (when (featurep 'ns)
   (push '(ns-transparent-titlebar . t) default-frame-alist))
 (setq-default mode-line-format nil)
+
+;; Increase how much is read from processes in a single chunk
+(setq read-process-output-max (* 2 1024 1024))  ; 1024kb
+
+(setq process-adaptive-read-buffering nil)
+
+;; Don't ping things that look like domain names.
+(setq ffap-machine-p-known 'reject)
+
 
 (provide 'early-init)
 ;;; early-init.el ends here

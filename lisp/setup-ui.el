@@ -9,8 +9,7 @@
 (require 'init-funcs)
 
 ;;(setq frame-resize-pixelwise t)
-;; Emacs plus 28+ no title bar config
-;;(add-to-list 'default-frame-alist '(undecorated-round . t))
+
 
 ;; cursor type set hbar
 (setq-default cursor-type 'bar)
@@ -60,24 +59,15 @@
                             `([,(cdr char-regexp) 0 font-shape-gstring]))))
   (set-char-table-parent composition-ligature-table composition-function-table))
 
-;; For doom-modeline
-;;(use-package doom-modeline
-;;  :ensure t
-;;  :init
-;;  (doom-modeline-mode 1)
-;;  :custom
-;;  (doom-modeline-icon-font-size 13)
-;;  (doom-modeline-icon t)
-;;  (doom-modeline-nerd-font t))
 
 (defvar lsp-modeline--code-actions-string nil)
 
 (setq-default mode-line-format
   '("%e"
-	(:propertize " " display (raise +0.1)) ;; Top padding
-	(:propertize " " display (raise -0.1)) ;; Bottom padding
+	(:propertize " " display (raise +0.5)) ;; Top padding
+	(:propertize " " display (raise -0.5)) ;; Bottom padding
 
-	(:propertize " " face font-lock-comment-face)
+	(:propertize "  " face font-lock-comment-face)
 	mode-line-frame-identification
 	mode-line-buffer-identification
 
@@ -115,25 +105,6 @@
   :config
   (keycast-mode-line-mode 1))
 
-
-;; For doom-themes
-(use-package doom-themes
-  :ensure t
-  ;;:init
-  ;;(load-theme 'doom-one t)
-  :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
-
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  ;; Treemacs theme
-  (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-  (doom-themes-treemacs-config)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
-
 ;; For mini-frame (used by nano setup)
 (use-package mini-frame
   :ensure t)
@@ -143,7 +114,7 @@
   :ensure t
   ;;:init
   ;; ef-dream or ef-day
-  ;;(load-theme 'ef-day :no-confirm)
+  ;;(load-theme 'ef-dream :no-confirm)
   :config
   (setq ef-themes-mixed-fonts t
         ef-themes-variable-pitch-ui t)
@@ -162,7 +133,7 @@
 (use-package modus-themes
   :ensure t
   :init
-  (load-theme 'modus-operandi-tinted t)
+  (load-theme 'modus-vivendi t)
   :config
   (setq modus-themes-bold-constructs t)
   (setq modus-themes-prompts '(bold italic))
@@ -175,37 +146,6 @@
         (2 . (semibold 1.2))
         (t . (rainbow)))) ; style for all other headings
 )
-
-;; For nano-local-system (local N Λ N O system from site-lisp/nano-emacs/)
-(use-package nano-local-system
-  :ensure nil
-  :load-path "site-lisp/nano-emacs"
-  :init
-  ;; Custom variables set before loading nano components
-  (setq nano-font-family-monospaced "Maple Mono NL")
-  (setq nano-font-size 13)
-  :config
-  ;; Require all the nano components
-  (require 'nano-base-colors)
-  (require 'nano-faces)
-  (require 'nano-theme)
-  (require 'nano-theme-dark)
-  (require 'nano-theme-light)
-  (require 'nano-modeline)
-  (when (member "-compact" command-line-args)
-    (require 'nano-compact))
-  (require 'nano-splash)
-  (require 'nano-colors)
-  (require 'nano-command)
-
-  ;; Theme activation
-  (nano-theme-set-dark)
-  (call-interactively 'nano-refresh-theme)
-
-  ;; Welcome message
-  (let ((inhibit-message t))
-    (message "Welcome to GNU Emacs / N Λ N O edition")
-    (message (format "Initialization time: %s" (emacs-init-time)))))
 
 ;; For nerd-icons
 (use-package nerd-icons
