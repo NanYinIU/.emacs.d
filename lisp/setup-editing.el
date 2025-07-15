@@ -62,7 +62,11 @@
   :config
 ;;  (define-key iedit-mode-keymap (kbd "M-h") 'iedit-restrict-function)
 ;;  (define-key iedit-mode-keymap (kbd "M-i") 'iedit-restrict-current-line))
-)
+  )
+(use-package anzu
+  :ensure t
+  :config
+  (global-anzu-mode +1))
 
 ;; For multiple-cursors
 (use-package multiple-cursors

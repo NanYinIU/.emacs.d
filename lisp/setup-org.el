@@ -420,55 +420,7 @@
   ;;   (advice-add 'doom-modeline-buffer-file-name
   ;;               :around #'my-doom-modeline-roam-aware-buffer-file-name))
 
-  ;; Standalone function for default modeline
-  (defun my-roam-aware-buffer-name ()
-    "Return a formatted buffer name for Org Roam files, or default buffer name for others."
-    (if (and (boundp 'org-roam-directory)
-             org-roam-directory
-             (stringp buffer-file-name)
-             (require 's nil 'noerror)
-             (s-starts-with-p (file-truename org-roam-directory) (file-truename buffer-file-name))
-             (s-ends-with-p ".org" buffer-file-name t))
 
-        ;; Process Org Roam files
-        (let* ((filename (file-name-nondirectory buffer-file-name))
-               (name-part (file-name-sans-extension filename))
-               (name-part-spaced (subst-char-in-string ?_ ?\s name-part))
-               (icon "")
-               (display-string nil))
-
-          (cond
-           ;; Daily files: "2023-01-01" or "20230101"
-           ((string-match "^\\([0-9]\\{4\\}\\)[-_]?\\([0-9]\\{2\\}\\)[-_]?\\([0-9]\\{2\\}\\)$" name-part-spaced)
-            (let ((year (match-string 1 name-part-spaced))
-                  (month (match-string 2 name-part-spaced))
-                  (day (match-string 3 name-part-spaced)))
-              (setq display-string (format "%s%s-%s-%s" icon year month day))))
-
-           ;; Title-Date format: "我的笔记-20230101120000"
-           ((string-match "^\\(.*\\)-\\([0-9]\\{4\\}\\)\\([0-9]\\{2\\}\\)\\([0-9]\\{2\\}\\)[0-9]*$" name-part-spaced)
-            (let ((title-part (s-trim (match-string 1 name-part-spaced)))
-                  (year  (match-string 2 name-part-spaced))
-                  (month (match-string 3 name-part-spaced))
-                  (day   (match-string 4 name-part-spaced)))
-              (if (not (s-blank? title-part))
-                  (setq display-string (format "%s(%s%s-%s-%s)" title-part icon year month day)))))
-
-           ;; Date-Title format: "20230101120000-我的笔记"
-           ((string-match "^\\([0-9]\\{4\\}\\)\\([0-9]\\{2\\}\\)\\([0-9]\\{2\\}\\)[0-9]*-\\(.*\\)$" name-part-spaced)
-            (let ((year (match-string 1 name-part-spaced))
-                  (month (match-string 2 name-part-spaced))
-                  (day (match-string 3 name-part-spaced))
-                  (title-part (s-trim (match-string 4 name-part-spaced))))
-              (if (not (s-blank? title-part))
-                  (setq display-string (format "%s(%s-%s-%s) %s" icon year month day title-part))
-                (setq display-string (format "%s(%s-%s-%s)" icon year month day))))))
-
-          ;; Return formatted string or fallback to filename
-          (or display-string name-part-spaced))
-
-      ;; For non-Roam files, return buffer name
-      (buffer-name)))
 
   ;; Custom modeline format using the roam-aware function
   (defun my-custom-modeline-buffer-identification ()

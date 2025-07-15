@@ -19,12 +19,12 @@
 
 ;; For consult
 (use-package consult
-  :ensure t ; 确保安装
-  :bind (;; 您的 Consult 快捷键绑定... (可以根据需要精简)
-         ;; 例如，保留一些核心的：
+  :ensure t
+  :bind (
          ("C-x b" . consult-buffer)
          ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
          ;; ("M-x" . consult-complex-command) ; 或者使用默认的 execute-extended-command，让 Vertico 处理
+         ("C-c r"   . #'consult-recent-file)
          ("C-c i" . consult-info)
          ([remap Info-search] . consult-info)
 
@@ -49,6 +49,11 @@
   (with-eval-after-load 'xref
     (setq xref-show-xrefs-function #'consult-xref
           xref-show-definitions-function #'consult-xref))
+  :custom
+  (completion-in-region-function #'consult-completion-in-region)
+  (xref-show-xrefs-function #'consult-xref)
+  (xref-show-definitions-function #'consult-xref)
+  (consult-project-root-function #'deadgrep--project-root) ;; ensure ripgrep works
   :config
   (setq consult-preview-key nil) ; 您的预览设置
   (consult-customize
