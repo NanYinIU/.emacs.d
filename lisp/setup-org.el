@@ -188,14 +188,6 @@
   (add-hook 'dired-mode-hook #'org-download-enable)
   )
 
-;; For org-fancy-priorities
-;;(use-package org-fancy-priorities
-;;  :ensure t
-;;  :diminish
-;;  :hook (org-mode . org-fancy-priorities-mode)
-;;  :config
-;;  (setq org-fancy-priorities-list
-;;        '("🅰" "🅱" "🅲" "🅳" "🅴")))
 
 ;; For org-modern
 (use-package org-modern
@@ -206,7 +198,6 @@
          (org-modern-mode . (lambda ()
                               "为 org-modern-mode 进行额外调整"
                               ;; 禁用 Emacs 内建的 prettify-symbols-mode，避免与 org-modern 冲突
-                              ;; 这是你配置中已有的好做法
                               (setq prettify-symbols-alist nil)
                               (prettify-symbols-mode -1)
 
@@ -223,19 +214,7 @@
                               ;; --- 标签样式 ---
                               ;; 使用更柔和的标签背景色，或者只改变前景色
                               (setq org-modern-tag-faces '((:foreground "dim gray" :weight 'semi-bold)))
-                              ;; 或者给标签加上边框/药丸形状 (需要主题或额外 face 定义支持良好)
-                              ;; (setq org-modern-tag-faces '((:box (:line-width (-1 . -1) :color "gray" :style nil) :foreground "dim gray")))
 
-                              ;; --- 列表项目符号 ---
-                              ;; 自定义无序列表的项目符号
-                              ;;(setq org-modern-list '((43 . "· ")  ; + (plus)
-                              ;;                        (45 . "– ")  ; - (hyphen)
-                              ;;                        (42 . "• "))) ; * (asterisk)
-
-                              ;;(setq org-modern-list
-                              ;;      '((45 . "❯ ")  ; When you type '-', display '❯ '
-                              ;;        (43 . "› ")  ; When you type '+', display '› '
-                              ;;        (42 . "» "))) ; When you type '*', display '» '
                               (setq org-pretty-entities t)
                               (setq org-modern-horizontal-rule "┈┈┈┈┈┈") ;; 虚线
 
@@ -249,8 +228,8 @@
                               (setq org-modern-table t)
 
                               ;; --- 元数据行 (如 #+TITLE, #+AUTHOR) ---
-                              (setq org-modern-keyword-foreground "DarkGoldenrod") ;; 改变元数据关键字的颜色
-                              (setq org-modern-meta-line-padding 1) ;; 增加元数据行上方的填充
+                              ;;(setq org-modern-keyword-foreground "DarkGoldenrod") ;; 改变元数据关键字的颜色
+                              ;;(setq org-modern-meta-line-padding 1) ;; 增加元数据行上方的填充
 
                               ;; --- 日程和时钟 ---
                               (setq org-modern-agenda-time-grid-custom-colors t) ;; 允许agenda时间网格使用自定义颜色
@@ -347,78 +326,8 @@
                 (propertize "${tags:10}" 'face 'org-tag)
                 ))
 
-  (defun my-doom-modeline-roam-aware-buffer-file-name (orig-fun &rest args)
-  "Display Org Roam filenames: 'YYYY-MM-DD' for dailies, and ' Title (YYYY-MM-DD)' or ' (YYYY-MM-DD) Title' for others."
-  ;; 基本条件检查：是否为 Org Roam 目录下的 .org 文件
-  (if (and (boundp 'org-roam-directory)
-           org-roam-directory
-           (stringp buffer-file-name)
-           (require 's nil 'noerror) ; 确保 s.el 字符串处理库可用
-           ;; 使用 file-truename 处理符号链接等情况，确保路径比较的准确性
-           (s-starts-with-p (file-truename org-roam-directory) (file-truename buffer-file-name))
-           (s-ends-with-p ".org" buffer-file-name t)) ; t 表示忽略后缀的大小写
 
-      ;; 提取文件名（不含路径和后缀），并将下划线替换为空格
-      (let* ((filename (file-name-nondirectory buffer-file-name))
-             (name-part (file-name-sans-extension filename))
-             (name-part-spaced (subst-char-in-string ?_ ?\s name-part))
-             (icon " ") ; 定义图标，方便复用
-             (display-string nil)) ; 用于存储最终显示的字符串
 
-        (cond
-         ;; ---------------------------------------------------------------------
-         ;; 模式1: "日志" 文件 (纯日期文件名，如 "2023-01-01" 或 "20230101")
-         ;; 期望输出: "2023-01-01" (不带图标)
-         ;; ---------------------------------------------------------------------
-         ((string-match "^\\([0-9]\\{4\\}\\)[-_]?\\([0-9]\\{2\\}\\)[-_]?\\([0-9]\\{2\\}\\)$" name-part-spaced)
-          (let ((year (match-string 1 name-part-spaced))
-                (month (match-string 2 name-part-spaced))
-                (day (match-string 3 name-part-spaced)))
-            ;; 可选: 如果希望日志文件必须在特定的 "daily/" 子目录下，可以在这里添加检查
-            ;; (if (s-contains-p "/daily/" buffer-file-name t) ... )
-            (setq display-string (format "%s%s-%s-%s" icon year month day))))
-
-         ;; ---------------------------------------------------------------------
-         ;; 模式2: "其他文件" - 标题在前，日期/时间戳在后 (如 "我的笔记-20230101120000")
-         ;; 期望输出: " 我的笔记 (2023-01-01)"
-         ;; ---------------------------------------------------------------------
-         ((string-match "^\\(.*\\)-\\([0-9]\\{4\\}\\)\\([0-9]\\{2\\}\\)\\([0-9]\\{2\\}\\)[0-9]*$" name-part-spaced)
-          (let ((title-part (s-trim (match-string 1 name-part-spaced))) ; 捕获标题并去除首尾空格
-                (year  (match-string 2 name-part-spaced))
-                (month (match-string 3 name-part-spaced))
-                (day   (match-string 4 name-part-spaced)))
-            (if (not (s-blank? title-part)) ; 确保标题部分不为空
-                (setq display-string (format "%s(%s%s-%s-%s)" title-part icon year month day)))))
-
-         ;; ---------------------------------------------------------------------
-         ;; 模式3: "其他文件" - 日期/时间戳在前，标题在后 (如 "20230101120000-我的笔记")
-         ;; 期望输出: " (2023-01-01) 我的笔记"
-         ;; ---------------------------------------------------------------------
-         ((string-match "^\\([0-9]\\{4\\}\\)\\([0-9]\\{2\\}\\)\\([0-9]\\{2\\}\\)[0-9]*-\\(.*\\)$" name-part-spaced)
-          (let ((year (match-string 1 name-part-spaced))
-                (month (match-string 2 name-part-spaced))
-                (day (match-string 3 name-part-spaced))
-                (title-part (s-trim (match-string 4 name-part-spaced))))
-            (if (not (s-blank? title-part)) ; 如果有标题部分
-                (setq display-string (format "%s(%s-%s-%s) %s" icon year month day title-part))
-              ;; 如果标题部分为空 (例如文件名是 "202301011200-")，也显示带图标的日期
-              (setq display-string (format "%s(%s-%s-%s)" icon year month day))))))
-        ;; --- End of cond ---
-
-        ;; 如果以上任何自定义格式规则匹配成功，则使用 display-string
-        (if display-string
-            display-string
-          ;; 如果所有自定义规则都未匹配，则调用原始函数处理。
-          ;; 这确保了如果文件名不符合上述任何一种 Roam 特定格式，
-          ;; 或者您希望原始函数有其他处理逻辑，它仍然会被执行。
-          (apply orig-fun args)))
-
-    ;; 如果不是 Org Roam 目录下的 .org 文件，则直接调用原始函数
-    (apply orig-fun args)))
-  ;; Doom-modeline advice (commented out since you're using default modeline)
-  ;; (with-eval-after-load 'doom-modeline
-  ;;   (advice-add 'doom-modeline-buffer-file-name
-  ;;               :around #'my-doom-modeline-roam-aware-buffer-file-name))
 
 
 
@@ -698,6 +607,7 @@ If nil it defaults to `split-string-default-separators', normally
   )
 
 (use-package org-transclusion-http
+  :after org-transclusion
   :ensure t
   :config
   (add-to-list 'org-transclusion-extensions 'org-transclusion-http)

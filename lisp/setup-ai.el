@@ -15,6 +15,8 @@
 ;;  (aidermacs-use-architect-mode t)
 ;;  (aidermacs-default-model "sonnet"))
 
+(require 'gptel-integrations)
+
 ;; Add your API keys to ~/.authinfo
 (use-package gptel
   :config
@@ -44,10 +46,35 @@
             deepseek/deepseek-chat-v3-0324
             deepseek/deepseek-r1-0528))
 
+  (gptel-make-tool
+   :name "read_buffer"                    ; javascript-style snake_case name
+   :function (lambda (buffer)                  ; the function that will run
+               (unless (buffer-live-p (get-buffer buffer))
+                 (error "error: buffer %s is not live." buffer))
+               (with-current-buffer  buffer
+                 (buffer-substring-no-properties (point-min) (point-max))))
+   :description "return the contents of an emacs buffer"
+   :args (list '(:name "buffer"
+                       :type string            ; :type value must be a symbol
+                       :description "the name of the buffer whose contents are to be retrieved"))
+   :category "emacs")                     ; An arbitrary label for grouping
   (setq
    gptel-model 'gemini-2.0-flash
    gptel-backend  (gptel-make-gemini "Gemini" :key (get-authinfo-password "gemini.com") :stream t))
-)
+  )
+
+(use-package mcp
+  :ensure t
+  :after gptel
+  :custom (mcp-hub-servers
+           `(("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/Users/gaoguoxing/")))
+             ("fetch" . (:command "uvx" :args ("mcp-server-fetch")))
+             ("playwright" . (:command "npx" :args ("-y" "@executeautomation/playwright-mcp-server")))
+             ("Sequential Thinking" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-sequential-thinking")))
+             ))
+  :config (require 'mcp-hub)
+  :hook (after-init . mcp-hub-start-all-server)
+  )
 
 (provide 'setup-ai)
 

@@ -82,10 +82,10 @@
 
 ;; For ef-theme
 (use-package ef-themes
-  :ensure t
+  ;;:ensure t
   ;;:init
   ;; ef-dream or ef-day
-  ;;(load-theme 'ef-dream :no-confirm)
+  ;; (load-theme 'ef-winter :no-confirm)
   :config
   (setq ef-themes-mixed-fonts t
         ef-themes-variable-pitch-ui t)
@@ -102,9 +102,9 @@
   )
 
 (use-package modus-themes
-  :ensure t
-  :init
-  (load-theme 'modus-vivendi t)
+  ;;:ensure t
+  ;;:init
+  ;;(load-theme 'modus-operandi-tinted t)
   :config
   (setq modus-themes-bold-constructs t)
   (setq modus-themes-prompts '(bold italic))
@@ -116,7 +116,32 @@
       '((1 . t)           ; keep the default style
         (2 . (semibold 1.2))
         (t . (rainbow)))) ; style for all other headings
-)
+  )
+
+(use-package standard-themes
+  :ensure t
+  :init
+  (load-theme 'standard-dark t)
+  :config
+  (setq standard-themes-bold-constructs t
+      standard-themes-italic-constructs t
+      standard-themes-disable-other-themes t
+      standard-themes-mixed-fonts t
+      standard-themes-variable-pitch-ui t
+      standard-themes-prompts '(extrabold italic)
+      standard-themes-to-toggle '(standard-light standard-dark)
+      standard-themes-to-rotate '(standard-light standard-light-tinted standard-dark standard-dark-tinted)
+      standard-themes-headings
+      '((0 . (variable-pitch ultrabold 1.3))
+        (1 . (variable-pitch extrabold 1.2))
+        (2 . (variable-pitch light 1.1))
+        (3 . (variable-pitch heavy 1))
+        (4 . (variable-pitch rainbow bold 1))
+        (agenda-date . (1.3))
+        (agenda-structure . (variable-pitch light 1.3))
+        (t . (rainbow))))
+  ;;(standard-themes-load-theme 'standard-light)
+  )
 
 ;; For nerd-icons
 (use-package nerd-icons

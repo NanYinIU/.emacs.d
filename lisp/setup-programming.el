@@ -66,7 +66,7 @@
                                                             (t "config_linux")))
                                   (jdtls-configuration-dir (expand-file-name os-config-dir-name jdtls-install-dir))
                                   (project-data-suffix
-                                   (if project-root
+                                   (if (and project-root (stringp project-root))
                                        (md5 (expand-file-name project-root))
                                      "default_non_project_workspace"))
                                   (project-specific-data-dir

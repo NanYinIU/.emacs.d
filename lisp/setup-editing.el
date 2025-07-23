@@ -34,13 +34,28 @@
   :diminish
   :hook (after-init . editorconfig-mode))
 
+(use-package ultra-scroll
+  ;;:vc (:url "https://github.com/jdtsmith/ultra-scroll") ; if desired (emacs>=v30)
+  :ensure t
+  :init
+  (setq scroll-conservatively 3 ; or whatever value you prefer, since v0.4
+        scroll-margin 0)        ; important: scroll-margin>0 not yet supported
+  :config
+  (ultra-scroll-mode 1))
+
 (use-package move-dup
+  :ensure t
   :bind (:map custom-bindings-map
               (("C-M-<up>"    . move-dup-move-lines-up)
                ("C-M-<down>"  . move-dup-move-lines-down)
                ;;("C-M-<left>"  . move-dup-move-lines-up)
                ;;("C-M-<right>" . move-dup-move-lines-down)
                ("M-W"         . move-dup-duplicate-down))))
+
+(use-package comment-dwim-2
+  :ensure t
+  :bind
+  ("M-;" . comment-dwim-2))
 
 ;;(define-key custom-bindings-map (kbd "C-S-k") 'kill-whole-line)r
 
