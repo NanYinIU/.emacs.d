@@ -1,4 +1,4 @@
-(defcustom centaur-org-directory (expand-file-name "~/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents")
+(defcustom org-directory (expand-file-name "~/Library/Mobile Documents/iCloud~com~logseq~logseq/Documents")
   "Set org directory."
   :group 'centaur
   :type 'string)

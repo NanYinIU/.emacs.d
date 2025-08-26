@@ -55,7 +55,9 @@
   (xref-show-definitions-function #'consult-xref)
   (consult-project-root-function #'deadgrep--project-root) ;; ensure ripgrep works
   :config
-  (setq consult-preview-key nil) ; 您的预览设置
+  (setq consult-preview-key nil)
+
+
   (consult-customize
    consult-line consult-line-multi :preview-key 'any
    consult-buffer consult-recent-file consult-theme :preview-key '(:debounce 1.0 any)
@@ -144,8 +146,8 @@
   :ensure t
   :init
   ;; make consult-ripgrep work (保留您原来的编码设置，如果需要)
-  (add-to-list 'process-coding-system-alist
-               '("[rR][gG]" . (utf-8-dos . windows-1251-dos)))
+  ;; (add-to-list 'process-coding-system-alist
+  ;;              '("[rR][gG]" . (utf-8-dos . windows-1251-dos)))
   (vertico-mode)
   :config
   (define-key vertico-map (kbd "C-j") #'vertico-next)

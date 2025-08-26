@@ -6,10 +6,10 @@
 (use-package org
   :ensure t
   :init
-  ;; Define centaur-org-directory if it's not already defined (e.g. from init-custom.el)
+  ;; Define org-directory if it's not already defined (e.g. from init-custom.el)
   ;; This is a placeholder; actual value should be set in init-custom.el or similar
-  (unless (boundp 'centaur-org-directory)
-    (defvar centaur-org-directory "~/org/"
+  (unless (boundp 'org-directory)
+    (defvar org-directory "~/org/"
       "Default directory for Org files if not set in init-custom.el."))
   (setq org-confirm-babel-evaluate nil
         org-src-fontify-natively t
@@ -28,9 +28,9 @@
       (mermaid    . t)
       (plantuml   . t))
     "Alist of org ob languages.")
-  (setq inbox-dir (expand-file-name "INBOX.org" centaur-org-directory))
-  (setq todo-dir (expand-file-name "TODOs.org" centaur-org-directory))
-  (setq book-dir (expand-file-name "TODOs.org" centaur-org-directory)) ; Assuming book-dir is same as todo-dir based on init-org.el
+  (setq inbox-dir (expand-file-name "INBOX.org" org-directory))
+  (setq todo-dir (expand-file-name "TODOs.org" org-directory))
+  (setq book-dir (expand-file-name "TODOs.org" org-directory)) ; Assuming book-dir is same as todo-dir based on init-org.el
   (setq
    org-startup-with-inline-images t
    org-hierarchical-todo- t
@@ -42,6 +42,7 @@
    '((sequence "TODO(t)" "PROJ(p)" "NEXT(n)" " WAIT(w)" "FIXME(f)" "|" "DONE(d!)" "CANCELLED(c!)")
      (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")
      )
+   org-log-done 'time
    org-statisticstodo-keyword-faces '(
                                       ("NEXT" . (doom-color 'green)) ; Assuming doom-color is defined
                                       ("FIXME" . (doom-color 'green))
@@ -75,17 +76,17 @@
                  (file+headline inbox-dir "Web")
                  "* %a\n%?%i"))
 ;;  (setq org-agenda-files (list
-;;                          (expand-file-name "TODOs.org" centaur-org-directory)
-;;                          (expand-file-name "INBOX.org" centaur-org-directory)
-;;                          (expand-file-name "ARCHIVED.org" centaur-org-directory)
-;;                          (expand-file-name "daily" centaur-org-directory)
+;;                          (expand-file-name "TODOs.org" org-directory)
+;;                          (expand-file-name "INBOX.org" org-directory)
+;;                          (expand-file-name "ARCHIVED.org" org-directory)
+;;                          (expand-file-name "daily" org-directory)
 ;;                          ))
 ;;  (setq org-agenda-files
-;;        (directory-files-recursively centaur-org-directory "\\.org$"))
+;;        (directory-files-recursively org-directory "\\.org$"))
 
   (setq org-refile-targets '((org-agenda-files :maxlevel . 4) ; 扫描 agenda 文件中的标题，最深4级
                            (nil :maxlevel . 3)))          ; 也允许归档到当前文件的标题
-  ;;  (setq org-agenda-files (list centaur-org-directory))
+  ;;  (setq org-agenda-files (list org-directory))
   (setq org-agenda-skip-scheduled-if-done t)
   (setq org-agenda-skip-deadline-if-done t)
   (setq org-agenda-include-deadlines t)
@@ -178,13 +179,13 @@
   (org-download-display-inline-images 'posframe)
   (org-download-method 'attach)
   ;; not work，use custom.el config
-  ;; (org-download-image-dir (expand-file-name "img/" (file-truename centaur-org-directory))) ; centaur-org-directory needs to be defined
+  ;; (org-download-image-dir (expand-file-name "img/" (file-truename org-directory))) ; org-directory needs to be defined
   (org-download-heading-lvl nil)
   (org-download-image-attr-list
    '("#+ATTR_HTML: :width 65% :align center"))
   :config
-  (when (boundp 'centaur-org-directory) ; Set image dir only if centaur-org-directory is defined
-    (setq org-download-image-dir (expand-file-name "img/" (file-truename centaur-org-directory))))
+  (when (boundp 'org-directory) ; Set image dir only if org-directory is defined
+    (setq org-download-image-dir (expand-file-name "img/" (file-truename org-directory))))
   (add-hook 'dired-mode-hook #'org-download-enable)
   )
 
@@ -264,12 +265,12 @@
    org-roam-node-find)
   :init
   ;;  (setq org-id-extra-files (org-roam--list-files org-roam-directory))
-  ;; Ensure centaur-org-directory is defined before use
-  (unless (boundp 'centaur-org-directory)
-    (defvar centaur-org-directory "~/org/"
+  ;; Ensure org-directory is defined before use
+  (unless (boundp 'org-directory)
+    (defvar org-directory "~/org/"
       "Default directory for Org files if not set in init-custom.el."))
   (setq
-   org-roam-directory (file-truename centaur-org-directory)
+   org-roam-directory (file-truename org-directory)
    org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag))
    )
   :config

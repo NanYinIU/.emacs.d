@@ -82,10 +82,10 @@
 
 ;; For ef-theme
 (use-package ef-themes
-  ;;:ensure t
+  :ensure t
   ;;:init
   ;; ef-dream or ef-day
-  ;; (load-theme 'ef-winter :no-confirm)
+  ;; (load-theme 'ef-day :no-confirm)
   :config
   (setq ef-themes-mixed-fonts t
         ef-themes-variable-pitch-ui t)
@@ -101,27 +101,43 @@
 
   )
 
+(use-package moe-theme
+  :ensure t
+  :init
+  (load-theme 'moe-dark :no-confirm)
+  :config
+  (setq moe-theme-highlight-buffer-id t)
+  (setq moe-theme-modeline-color 'cyan)
+  )
+
 (use-package modus-themes
   ;;:ensure t
   ;;:init
   ;;(load-theme 'modus-operandi-tinted t)
   :config
-  (setq modus-themes-bold-constructs t)
+  (setq modus-themes-bold-constructs t
+        modus-themes-italic-constructs t
+        modus-themes-mixed-fonts t
+        modus-themes-variable-pitch-ui t)
+
   (setq modus-themes-prompts '(bold italic))
   (setq modus-themes-completions
       '((matches . (extrabold underline))
         (selection . (semibold italic))))
 
   (setq modus-themes-headings
-      '((1 . t)           ; keep the default style
-        (2 . (semibold 1.2))
-        (t . (rainbow)))) ; style for all other headings
+      '((1 . (variable-pitch 1.5))
+        (2 . (1.3))
+        (agenda-date . (1.3))
+        (agenda-structure . (variable-pitch light 1.8))
+        (t . (1.1))))
+
   )
 
 (use-package standard-themes
-  :ensure t
-  :init
-  (load-theme 'standard-dark t)
+  ;;:ensure t
+  ;;:init
+  ;;(load-theme 'standard-dark t)
   :config
   (setq standard-themes-bold-constructs t
       standard-themes-italic-constructs t

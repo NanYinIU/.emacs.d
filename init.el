@@ -79,7 +79,8 @@
 
 ;; Basic modes
 (global-hl-line-mode)
-(global-display-line-numbers-mode)
+(global-display-line-numbers-mode -1)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (show-paren-mode 1)
 (delete-selection-mode 1)
 (global-auto-revert-mode 1)

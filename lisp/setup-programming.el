@@ -227,12 +227,5 @@
   :ensure t
   :after yasnippet)
 
-(use-package leetcode
-  :ensure t
-  :config
-  (setq leetcode-prefer-language "java")
-  (setq leetcode-prefer-sql "mysql")
-  (setq leetcode-directory "~/leetcode"))
-
 (provide 'setup-programming)
 ;;; setup-programming.el ends here

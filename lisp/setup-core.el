@@ -216,5 +216,9 @@
   ;; (vterm-mode . (lambda () (message "vterm ready!")))
   )
 
+(add-to-list 'process-coding-system-alist
+             '("[rR][gG]" . (utf-8 . utf-8)))
+
+
 (provide 'setup-core)
 ;;; setup-core.el ends here
