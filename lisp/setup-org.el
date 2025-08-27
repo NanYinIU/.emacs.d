@@ -288,12 +288,12 @@
                               "#+title:${title}\n#+filetags: :note:\n#+SETUPFILE: ~/.emacs.d/white_clean.theme\n\n")
            :unnarrowed t)
 
-          ("p" "Project Note" entry "* Metadata\n:PROPERTIES:\n:Status: Active\n:Deadline:\n:END:"
+          ("p" "Project Note" entry "* ${slug}\n:PROPERTIES:\n:Status: Active\n:Deadline:\n:END:"
            :target (file+head "note/${slug}-%<%Y%m%d%H%M%S>.org"
                               "#+title: P: ${title}\n#+category: Project\n#+filetags: :note:\n#+SETUPFILE: ~/.emacs.d/white_clean.theme\n\n")
            :unnarrowed t)
 
-          ("w" "Work Document" entry "* Metadata\n:PROPERTIES:\n:Status: Active\n:END:\n\n%^{Link}\n\n%? "
+          ("w" "Work Document" entry "* ${slug}\n:PROPERTIES:\n:Status: Active\n:END:\n\n%^{Link}\n\n%? "
            :target (file+head "work/${slug}-%<%Y%m%d%H%M%S>.org"
                               "#+title: W: ${title}\n#+category: Project\n#+filetags: :vault:\n#+SETUPFILE: ~/.emacs.d/white_clean.theme\n\n")
            :unnarrowed t)
@@ -616,81 +616,127 @@ If nil it defaults to `split-string-default-separators', normally
 
 (use-package org-ql
   :ensure t
-  :after org
+  :after org-roam
   :config
   ;; 定义 org-ql 的搜索范围，与 agenda-files 保持一致
 ;;  (setq org-ql-search-directories (file-expand-wildcards org-agenda-files))
-  (setq org-ql-search-directories-files (list org-roam-directory))
+  (setq org-ql-search-directories-files (list org-directory))
 
-  ;; 定义我们想要在 Sidebar 中看到的“视图”
+
+  ;; 定义我们想要在 Sidebar 中看到的"视图"
   (setq org-ql-views
         '(
-
-          ("📅 Today's Agenda"
-           :query (or (deadline :on today) (scheduled :to today) (ts-active :on today))
-           ;;:sort '(priority)
-           :order-by 'deadline
+           ("📅 Today's Agenda"
+           :query (or (deadline :on today) (scheduled :on today))
+           :buffers-files  org-roam-list-files
+           :sort (deadline)
            )
 
            ("🔥 Overdue Items"
            :query (and (not (done))
-                     (or (scheduled :from "-7d" :to today)
-                         (deadline :from "-7d" :to today)
-                         ;;(timestamp :from "-7d" :to today)
-                         ))
-           :sort '(deadline scheduled))
+                     (or (scheduled :to -1)  ; relative date: yesterday
+                         (deadline :to -1)))  ; relative date: yesterday
+           :buffers-files  org-roam-list-files
+           :sort (deadline scheduled))
 
            ("⚡ Upcoming Agenda (7-Day)"
-             :query (and (todo)
-                     (or (scheduled :from today :to "+7d")
-                         (deadline :from today :to "+7d")))
-             :sort '(deadline scheduled))
+           :query (and (todo)
+                       (or (scheduled :from today)
+                           (deadline :from today)))
+           :buffers-files  org-roam-list-files
+           )
+
+          ("✅ Completed This Week"
+           :query (and (done) (closed :from -7))
+           :buffers-files  org-roam-list-files
+           :sort (closed))
 
           ("🤔 Waiting For"
            :query (tags "waiting")
-           :sort '(priority))
+           :buffers-files  org-roam-list-files
+           :sort (priority))
 
           ("🚧 Blocked"
-           :query (tags "blocked"))
+           :query (tags "blocked")
+           :buffers-files  org-roam-list-files
+           )
 
           ("📂 Active Projects"
-           :query (and (level 1) (keyword "category" "Project")    ; 首先，它必须是个项目笔记
-             (property "Status" "Active"))    ; 其次，它的Status属性必须是Active
-           ;;:sort '(priority)
+           :query (and (level 1) (property "CATEGORY" "Project")
+                       (property "Status" "Active"))
+           :buffers-files  org-roam-list-files
            )
-
-          ("🧹 Orphaned Notes"
-           :query (and (not (link-count :from 1)) ; 没有出链
-             (not (link-count :to 1)))   ; 没有入链
-           ;;:sort '(title)
-           )
-          ))
+          )
   )
+)
 
 (use-package org-sidebar
   :ensure t
   :config
-  ;; 创建一个名为 "Dashboard" 的侧边栏配置
-  (setq org-sidebar-config
-        '((:name "Dashboard"
-           :panes
-           (;; 第一个窗格：显示我们的 QL 视图
-            (:name "⚡ My Views"
-             :type org-sidebar-ql
-             :include ("Today's Agenda" "Overdue Items" "⚡ Upcoming Agenda (7-Day)"))
-            ;; 第二个窗格：显示项目列表
-            (:name "📂 Projects"
-             :type org-sidebar-ql
-             :include ("Active Projects"))
-            ;; 第三个窗格：显示当前文件的目录树
-            (:name "📄 Current File"
-             :type org-sidebar-tree)
-            ))))
-  ;; 设置默认侧边栏
-  (setq org-sidebar-default-config-name "Dashboard"))
+  ;; 创建兼容的侧边栏函数
+  (defun my-minimal-sidebar-today (source-buffer)
+    "今日议程"
+    (let ((display-buffer
+           (generate-new-buffer (format "org-sidebar<%s>" (buffer-name source-buffer))))
+          (title "📅 Today's Agenda")
+         (files (org-roam-list-files)))
+      (with-current-buffer display-buffer
+        (setf org-sidebar-source-buffer source-buffer))
+      (save-window-excursion
+        (org-ql-search (mapcar #'find-file-noselect files)
+          '(or (deadline :on today) (scheduled :on today))
+          :narrow t :sort '(deadline)
+          :buffer display-buffer
+          :title title))
+      display-buffer))
 
-;; 绑定一个方便的快捷键来开关侧边栏，F8 是个不错的选择
-(global-set-key (kbd "<f8>") #'org-sidebar-toggle)
+  (defun my-minimal-sidebar-overdue (source-buffer)
+    "进行中项目"
+    (let* ((display-buffer
+            (generate-new-buffer (format "org-sidebar<%s>" (buffer-name source-buffer))))
+           (title "🔥 Overdue Items")
+           (files (org-roam-list-files)))
+      (with-current-buffer display-buffer
+        (setf org-sidebar-source-buffer source-buffer))
+      (save-window-excursion
+        (org-ql-search (mapcar #'find-file-noselect files)
+          `(and (not (done))
+                (or (scheduled :to -1)
+                    (deadline :to -1)))
+          :narrow t :sort '(deadline scheduled)
+          :buffer display-buffer
+          :title title))
+      display-buffer))
+
+   (defun my-minimal-sidebar-project (source-buffer)
+    "当前项目"
+    (let* ((display-buffer
+            (generate-new-buffer (format "org-sidebar<%s>" (buffer-name source-buffer))))
+           (title "📂 Active Projects")
+           (files (org-roam-list-files)))
+      (with-current-buffer display-buffer
+        (setf org-sidebar-source-buffer source-buffer))
+      (save-window-excursion
+        (org-ql-search (mapcar #'find-file-noselect files)
+          `(and (level 1) (property "CATEGORY" "Project")
+                (property "Status" "Active"))
+          :narrow t
+          :sort '(priority)
+          :buffer display-buffer
+          :title title))
+      display-buffer))
+
+
+  ;; 设置默认函数
+  (setq org-sidebar-default-fns
+        '(my-minimal-sidebar-today
+          my-minimal-sidebar-overdue
+          my-minimal-sidebar-project))
+
+  ;; 绑定一个方便的快捷键来开关侧边栏，F8 是个不错的选择
+  (global-set-key (kbd "<f9>") #'org-sidebar-toggle)
+
+  )
 ;;============ Org Mode Group End ===============
 
 (provide 'setup-org)
