@@ -90,21 +90,22 @@
   (setq ef-themes-mixed-fonts t
         ef-themes-variable-pitch-ui t)
 
-  (setq ef-themes-headings
-      '((1 light variable-pitch 1.2)
-        (2 regular 1.1)
-        (3 1.1)
-        (agenda-date 1.3)
-        (agenda-structure variable-pitch light 1.5)
-        (t variable-pitch)))
+  ;; Commented out to prevent conflicts with kanagawa-themes
+  ;; (setq ef-themes-headings
+  ;;     '((1 light variable-pitch 1.2)
+  ;;       (2 regular 1.1)
+  ;;       (3 1.1)
+  ;;       (agenda-date 1.3)
+  ;;       (agenda-structure variable-pitch light 1.5)
+  ;;       (t variable-pitch)))
   (setq org-modern-timestamp nil)
 
   )
 
 (use-package moe-theme
   :ensure t
-  :init
-  (load-theme 'moe-dark :no-confirm)
+;;  :init
+;;  (load-theme 'moe-dark :no-confirm)
   :config
   (setq moe-theme-highlight-buffer-id t)
   (setq moe-theme-modeline-color 'cyan)
@@ -125,38 +126,26 @@
       '((matches . (extrabold underline))
         (selection . (semibold italic))))
 
-  (setq modus-themes-headings
-      '((1 . (variable-pitch 1.5))
-        (2 . (1.3))
-        (agenda-date . (1.3))
-        (agenda-structure . (variable-pitch light 1.8))
-        (t . (1.1))))
+  ;; Commented out to prevent conflicts with kanagawa-themes
+  ;; (setq modus-themes-headings
+  ;;     '((1 . (variable-pitch 1.5))
+  ;;       (2 . (1.3))
+  ;;       (agenda-date . (1.3))
+  ;;       (agenda-structure . (variable-pitch light 1.8))
+  ;;       (t . (1.1))))
 
   )
 
-(use-package standard-themes
-  ;;:ensure t
-  ;;:init
-  ;;(load-theme 'standard-dark t)
-  :config
-  (setq standard-themes-bold-constructs t
-      standard-themes-italic-constructs t
-      standard-themes-disable-other-themes t
-      standard-themes-mixed-fonts t
-      standard-themes-variable-pitch-ui t
-      standard-themes-prompts '(extrabold italic)
-      standard-themes-to-toggle '(standard-light standard-dark)
-      standard-themes-to-rotate '(standard-light standard-light-tinted standard-dark standard-dark-tinted)
-      standard-themes-headings
-      '((0 . (variable-pitch ultrabold 1.3))
-        (1 . (variable-pitch extrabold 1.2))
-        (2 . (variable-pitch light 1.1))
-        (3 . (variable-pitch heavy 1))
-        (4 . (variable-pitch rainbow bold 1))
-        (agenda-date . (1.3))
-        (agenda-structure . (variable-pitch light 1.3))
-        (t . (rainbow))))
-  ;;(standard-themes-load-theme 'standard-light)
+(use-package kanagawa-themes
+  :ensure t
+  :init
+  ;; Set the variables BEFORE loading the theme
+  (setq
+   kanagawa-themes-org-height nil
+   kanagawa-themes-org-bold nil
+   )
+  ;; Load theme AFTER setting the variables
+  (load-theme 'kanagawa-wave t)
   )
 
 ;; For nerd-icons

@@ -48,6 +48,11 @@
 ;; Don't ping things that look like domain names.
 (setq ffap-machine-p-known 'reject)
 
+;;(pixel-scroll-precision-mode 1)
+(setq mac-allow-anti-aliasing t)
+
+(set-frame-parameter (selected-frame) 'alpha-background 90)
+(add-to-list 'default-frame-alist '(alpha-background . 90))
 
 (provide 'early-init)
 ;;; early-init.el ends here

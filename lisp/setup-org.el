@@ -43,16 +43,16 @@
      (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")
      )
    org-log-done 'time
-   org-statisticstodo-keyword-faces '(
-                                      ("NEXT" . (doom-color 'green)) ; Assuming doom-color is defined
-                                      ("FIXME" . (doom-color 'green))
-                                      ("TODO" . (doom-color 'yellow))
-                                      ("PROJ" . (doom-color 'yellow))
-                                      ("WAIT" . (doom-color 'teal))
-                                      ("MAYBE" . (doom-color 'base5))
-                                      ("[ ]" . (doom-color 'green))
-                                      ("[-]" . (doom-color 'yellow))
-                                      ("[?]" . (doom-color 'red)))
+   org-todo-keyword-faces '(
+                            ("NEXT" . "#98C379")
+                            ("FIXME" . "#98C379")
+                            ("TODO" . "#E5C07B")
+                            ("PROJ" . "#E5C07B")
+                            ("WAIT" . "#56B6C2")
+                            ("MAYBE" . "#ABB2BF")
+                            ("[ ]" . "#98C379")
+                            ("[-]" . "#E5C07B")
+                            ("[?]" . "#E06C75"))
    )
   :config
   (setq org-capture-templates nil)
@@ -673,6 +673,14 @@ If nil it defaults to `split-string-default-separators', normally
 (use-package org-sidebar
   :ensure t
   :config
+  (defun my-org-ql-view-header-line-format (orig-fun &rest args)
+      "Remove 'View:' prefix from org-ql view header."
+      (let ((result (apply orig-fun args)))
+        (when (stringp result)
+          (setq result (replace-regexp-in-string "View:" "" result)))
+        result))
+
+   (advice-add 'org-ql-view--header-line-format :around #'my-org-ql-view-header-line-format)
   ;; 创建兼容的侧边栏函数
   (defun my-minimal-sidebar-today (source-buffer)
     "今日议程"
@@ -686,6 +694,7 @@ If nil it defaults to `split-string-default-separators', normally
         (org-ql-search (mapcar #'find-file-noselect files)
           '(or (deadline :on today) (scheduled :on today))
           :narrow t :sort '(deadline)
+          :super-groups '((:auto-planning))
           :buffer display-buffer
           :title title))
       display-buffer))
@@ -704,6 +713,7 @@ If nil it defaults to `split-string-default-separators', normally
                 (or (scheduled :to -1)
                     (deadline :to -1)))
           :narrow t :sort '(deadline scheduled)
+          :super-groups '((:auto-planning))
           :buffer display-buffer
           :title title))
       display-buffer))
@@ -713,7 +723,12 @@ If nil it defaults to `split-string-default-separators', normally
     (let* ((display-buffer
             (generate-new-buffer (format "org-sidebar<%s>" (buffer-name source-buffer))))
            (title "📂 Active Projects")
-           (files (org-roam-list-files)))
+            (files (sort (org-roam-list-files)
+                       (lambda (a b)
+                         (time-less-p (file-attribute-modification-time
+                                      (file-attributes b))
+                                      (file-attribute-modification-time
+                                      (file-attributes a)))))))
       (with-current-buffer display-buffer
         (setf org-sidebar-source-buffer source-buffer))
       (save-window-excursion
@@ -721,7 +736,8 @@ If nil it defaults to `split-string-default-separators', normally
           `(and (level 1) (property "CATEGORY" "Project")
                 (property "Status" "Active"))
           :narrow t
-          :sort '(priority)
+                                        ;:sort '(date priority)
+          ;;:super-groups '((:auto-planning))
           :buffer display-buffer
           :title title))
       display-buffer))

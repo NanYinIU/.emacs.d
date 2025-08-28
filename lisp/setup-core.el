@@ -219,6 +219,9 @@
 (add-to-list 'process-coding-system-alist
              '("[rR][gG]" . (utf-8 . utf-8)))
 
+(use-package beacon
+  :ensure t
+  :config (beacon-mode 1))
 
 (provide 'setup-core)
 ;;; setup-core.el ends here
