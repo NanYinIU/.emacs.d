@@ -9,8 +9,7 @@
             (setq gc-cons-threshold (* 20 1024 1024))))
 
 ;; Prevent unwanted runtime compilation for gccemacs (native-comp) users
-(setq native-comp-deferred-compilation nil ;; obsolete since 29.1
-      native-comp-jit-compilation nil)
+(setq native-comp-jit-compilation nil)
 
 ;; Package initialize occurs automatically, before `user-init-file' is
 ;; loaded, but after `early-init-file'. We handle package

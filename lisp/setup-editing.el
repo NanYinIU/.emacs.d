@@ -24,9 +24,6 @@
   (setq avy-style 'at-full)
   )
 
-;; For diminish
-(use-package diminish
-  :ensure t)
 
 ;; For editorconfig
 (use-package editorconfig

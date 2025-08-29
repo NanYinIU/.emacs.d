@@ -75,14 +75,6 @@
                '("w" "Web Capture" entry
                  (file+headline inbox-dir "Web")
                  "* %a\n%?%i"))
-;;  (setq org-agenda-files (list
-;;                          (expand-file-name "TODOs.org" org-directory)
-;;                          (expand-file-name "INBOX.org" org-directory)
-;;                          (expand-file-name "ARCHIVED.org" org-directory)
-;;                          (expand-file-name "daily" org-directory)
-;;                          ))
-;;  (setq org-agenda-files
-;;        (directory-files-recursively org-directory "\\.org$"))
 
   (setq org-refile-targets '((org-agenda-files :maxlevel . 4) ; 扫描 agenda 文件中的标题，最深4级
                            (nil :maxlevel . 3)))          ; 也允许归档到当前文件的标题
@@ -619,7 +611,6 @@ If nil it defaults to `split-string-default-separators', normally
   :after org-roam
   :config
   ;; 定义 org-ql 的搜索范围，与 agenda-files 保持一致
-;;  (setq org-ql-search-directories (file-expand-wildcards org-agenda-files))
   (setq org-ql-search-directories-files (list org-directory))
 
 

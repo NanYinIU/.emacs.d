@@ -7,16 +7,26 @@
 
 (require 'init-const)
 (require 'init-funcs)
+(require 'init-custom)
 
 ;; For apheleia - Formatter
 (use-package apheleia
   :ensure t
+  :defer t
   :config
-  (apheleia-global-mode +1))
+  (apheleia-global-mode +1)
+  ;; Configure format-on-save for python files
+  (setf (alist-get 'python-ts-mode apheleia-formatters)
+        '(("ruff" "format" "-")
+          ("black" "-q" "-")))
+  (setf (alist-get 'python-mode apheleia-formatters)
+        '(("ruff" "format" "-")
+          ("black" "-q" "-"))))
 
 ;; For eglot - LSP client
 (use-package eglot
   :ensure t
+  :defer t
   :hook ((python-mode . eglot-ensure)
          (python-ts-mode . eglot-ensure)
          (rust-mode . eglot-ensure)
@@ -33,7 +43,7 @@
 
   ;; Server configurations
   (add-to-list 'eglot-server-programs
-               `(python-ts-mode . ("~/.virtualenvs/nvim_py3_venv/bin/python" "-m" "pylsp")))
+               `(python-ts-mode . (,python-virtualenv-path "-m" "pylsp")))
   (add-to-list 'eglot-server-programs
                '(rust-ts-mode . ("rust-analyzer")))
   (add-to-list 'eglot-server-programs
@@ -43,11 +53,11 @@
               (:plugins
                (:jedi_completion (:include_params t
                                   :fuzzy t)
-                :jedi (:environment "/Users/gaoguoxing/.virtualenvs/nvim_py3_venv")
+                :jedi (:environment python-virtualenv-dir)
                 ;; :flake8 (:enabled t)
                 :black (:enabled t)
                 :rope_autoimport (:enabled t
-                                  :python_path "/Users/gaoguoxing/.virtualenvs/nvim_py3_venv"))))))
+                                  :python_path python-virtualenv-dir))))))
 
   ;; Java JDT LS configuration
   (let* (
@@ -161,42 +171,7 @@
   :bind (("C-<f5>" . quickrun)
          ("C-c X"  . quickrun)))
 
-;; For rust-mode and related tools
-(use-package rust-mode
-  :ensure t
-  :mode "\\.rs\\'"
-  :hook (rust-mode . eglot-ensure))
 
-;; For cargo - Rust package manager integration
-(use-package cargo
-  :ensure t
-  :hook (rust-mode . cargo-minor-mode)
-  :config
-  (setq shell-command-switch "-ic")
-  (defun my/cargo-test-current ()
-    "Run cargo test for the current test with debug logging."
-    (interactive)
-    (setenv "RUST_LOG" "debug")
-    (cargo-process-current-test))
-  (define-key cargo-mode-map (kbd "C-c C-c") nil)
-  :bind (:map rust-mode-map
-              (("C-c C-t" . my/cargo-test-current)))
-  :custom ((cargo-process--command-current-test "test --color never")
-           (cargo-process--enable-rust-backtrace t)))
-
-;; For rust-playground - Quick Rust code experimentation
-(use-package rust-playground
-  :ensure t
-  :after rust-mode
-  :custom (rust-playground-run-command "cargo run --color never")
-  :config
-  (setq rust-playground-basedir (expand-file-name "~/Develop/rust/playground"))
-  (add-hook 'conf-toml-mode-hook 'rust-playground-mode))
-
-;; Configure TOML mode for Rust
-(use-package toml-mode
-  :ensure t
-  :mode "\\.toml\\'")
 
 ;; For treesit-auto - Tree-sitter support
 (use-package treesit-auto
@@ -214,18 +189,6 @@
   :ensure t
   :mode ("\\.yml\\'" "\\.yaml\\'"))
 
-;; For yasnippet - Template system
-(use-package yasnippet
-  :ensure t
-  :diminish yas-minor-mode
-  :hook (prog-mode . yas-minor-mode)
-  :config
-  (yas-reload-all))
-
-;; For yasnippet-snippets - Collection of snippets
-(use-package yasnippet-snippets
-  :ensure t
-  :after yasnippet)
 
 (provide 'setup-programming)
 ;;; setup-programming.el ends here

@@ -43,9 +43,6 @@
   :bind-keymap ("C-c p" . projectile-command-map)
   )
 
-;; For tramp
-(use-package tramp
-  :ensure t)
 
 ;; For transient
 (use-package transient

@@ -38,11 +38,6 @@
 
 (benchmark-init/activate)
 
-(use-package exec-path-from-shell
-  :ensure t
-  :init
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
 
 ;; Update packages
 (unless (fboundp 'package-upgrade-all)
@@ -52,19 +47,6 @@
           auto-package-update-hide-results t)
     (defalias 'package-upgrade-all #'auto-package-update-now)))
 
-;; Setup straight.el as alternative package manager (optional)
-;; (defvar bootstrap-version)
-;; (let ((bootstrap-file
-;;        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-;;       (bootstrap-version 5))
-;;   (unless (file-exists-p bootstrap-file)
-;;     (with-current-buffer
-;;         (url-retrieve-synchronously
-;;          "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-;;          'silent 'inhibit-cookies)
-;;       (goto-char (point-max))
-;;       (eval-print-last-sexp)))
-;;   (load bootstrap-file nil 'nomessage))
 
 (provide 'init-package)
 ;;; init-package.el ends here

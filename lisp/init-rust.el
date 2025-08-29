@@ -1,30 +1,34 @@
-;;; init-rust.el -*- lexical-binding: t no-byte-compile: t -*-
+;;; init-rust.el --- Rust language support -*- lexical-binding: t -*-
 
+;;; Commentary:
+;; Rust language configuration and tools
+
+;;; Code:
+
+(require 'init-const)
+(require 'init-custom)
+
+;; For rust-mode
 (use-package rust-mode
-  :hook (rust-mode . my/rust-compile)
+  :ensure t
+  :mode "\\.rs\\'"
+  :hook ((rust-mode . eglot-ensure)
+         (rust-mode . my/rust-compile))
   :config
   (define-key rust-mode-map (kbd "C-c C-c") nil)
   (setq rust-format-on-save nil)
-;;  (global-leader
-;;    :major-modes
-;;    '(rust-mode t)
-;;    ;;and the keymaps:
-;;    :keymaps
-;;    '(rust-mode-map)
-;;    "=" 'rust-format-buffer
-;;    "c" 'rust-compile
-;;    "r" 'rust-run
-;;    "t" 'rust-test)
- ;; (define-key rust-mode-map (kbd "RET") 'av/auto-indent-method-maybe)
   (defun my/rust-compile ()
+    "Set compile command for Rust."
     (setq-local compile-command "cargo check --color never --tests")))
 
-
+;; For cargo - Rust package manager integration
 (use-package cargo
-  :hook ((rust-mode . cargo-minor-mode))
+  :ensure t
+  :hook (rust-mode . cargo-minor-mode)
   :config
   (setq shell-command-switch "-ic")
   (defun my/cargo-test-current ()
+    "Run cargo test for the current test with debug logging."
     (interactive)
     (setenv "RUST_LOG" "debug")
     (cargo-process-current-test))
@@ -34,17 +38,20 @@
   :custom ((cargo-process--command-current-test "test --color never")
            (cargo-process--enable-rust-backtrace t)))
 
+;; For rust-playground - Quick Rust code experimentation
 (use-package rust-playground
-  :hook ((rust-mode . rust-playground-mode))
+  :ensure t
+  :after rust-mode
+  :hook ((rust-mode . rust-playground-mode)
+         (conf-toml-mode . rust-playground-mode))
   :custom (rust-playground-run-command "cargo run --color never")
-  :commands (rust-playground-get-snippet-basedir)
   :config
-  (add-hook 'conf-toml-mode 'rust-playground-mode)
-  (setq rust-playground-basedir (expand-file-name "~/Develop/rust/playground")))
+  (setq rust-playground-basedir (expand-file-name rust-playground-dir)))
 
-(use-package conf-toml-mode
-  :ensure nil
-  :hook ((conf-toml-mode . rust-playground-mode)))
-
+;; Configure TOML mode for Rust
+(use-package toml-mode
+  :ensure t
+  :mode "\\.toml\\'")
 
 (provide 'init-rust)
+;;; init-rust.el ends here

@@ -84,63 +84,6 @@
  	 ;; Line and column numbers
 	 (:propertize "%4l:%c" face mode-line-buffer-id)))
 
-;;(use-package mood-line
-;;  :ensure t
-;;  ;; Enable mood-line
-;;  :init
-;;  (mood-line-mode)
-;;
-;;  ;; Use pretty Fira Code-compatible glyphs
-;;  :custom
-;;  (mood-line-glyph-alist mood-line-glyphs-fira-code)
-;;  (mood-line-format
-;;      (mood-line-defformat
-;;       :left
-;;       (((mood-line-segment-modal)                  . " ")
-;;        ((or (mood-line-segment-buffer-status) " ") . " ")
-;;        ((my-roam-aware-buffer-name)                . "  ")
-;;        ((mood-line-segment-anzu)                   . "  ")
-;;        ((mood-line-segment-multiple-cursors)       . "  ")
-;;        ((mood-line-segment-cursor-position)        . " ")
-;;        (mood-line-segment-scroll))
-;;       :right
-;;       (((mood-line-segment-vc)         . "  ")
-;;        ((mood-line-segment-major-mode) . "  ")
-;;        ((mood-line-segment-misc-info)  . "  ")
-;;        ((mood-line-segment-checker)    . "  ")
-;;        ((mood-line-segment-process)    . "  "))))
-;;
-;;  )
-
-;;(use-package lambda-line
-;;  ;;:straight (:type git :host github :repo "lambda-emacs/lambda-line")
-;;  :load-path "site-lisp/lambda-line"
-;;  :custom
-;;  (lambda-line-icon-time t) ;; requires ClockFace font (see below)
-;;  (lambda-line-clockface-update-fontset "ClockFaceRect") ;; set clock icon
-;;  (lambda-line-position 'top) ;; Set position of status-line
-;;  (lambda-line-abbrev t) ;; abbreviate major modes
-;;  (lambda-line-hspace "  ")  ;; add some cushion
-;;  (lambda-line-prefix t) ;; use a prefix symbol
-;;  (lambda-line-prefix-padding nil) ;; no extra space for prefix
-;;  (lambda-line-status-invert nil)  ;; no invert colors
-;;  (lambda-line-gui-ro-symbol  " ⨂") ;; symbols
-;;  (lambda-line-gui-mod-symbol " ⬤")
-;;  (lambda-line-gui-rw-symbol  " ◯")
-;;  (lambda-line-space-top +.30)  ;; padding on top and bottom of line
-;;  (lambda-line-space-bottom -.30)
-;;  (lambda-line-symbol-position 0.1) ;; adjust the vertical placement of symbol
-;;  ;;:commands (lambda-line-mode)
-;;  ;; set divider line in footer
-;;  :config
-;;  (when (eq lambda-line-position 'top)
-;;    (setq-default mode-line-format (list "%_"))
-;;    (setq mode-line-format (list "%_")))
-;;  ;;:init
-;;  (lambda-line-mode)
-;;
-;;  :defer t
-;;  )
 
 
   (defun my-doom-modeline-roam-aware-buffer-file-name (orig-fun &rest args)

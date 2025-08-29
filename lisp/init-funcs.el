@@ -124,8 +124,8 @@
 
 (defun childframe-completion-workable-p ()
   "Whether childframe completion is workable."
-  (and (boundp 'centaur-completion-style)
-       (eq centaur-completion-style 'childframe)
+  (and (boundp 'completion-style)
+       (eq completion-style 'childframe)
        (childframe-workable-p)))
 
 ;; Configuration reload
