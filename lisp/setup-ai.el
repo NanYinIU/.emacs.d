@@ -64,7 +64,7 @@
   )
 
 (use-package mcp
-  :ensure t
+  ;; :ensure t
   :after gptel
   :custom (mcp-hub-servers
            `(("filesystem" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-filesystem" "/Users/gaoguoxing/")))
@@ -73,7 +73,7 @@
              ("Sequential Thinking" . (:command "npx" :args ("-y" "@modelcontextprotocol/server-sequential-thinking")))
              ))
   :config (require 'mcp-hub)
-  :hook (after-init . mcp-hub-start-all-server)
+  ;;:hook (after-init . mcp-hub-start-all-server)
   )
 
 (provide 'setup-ai)

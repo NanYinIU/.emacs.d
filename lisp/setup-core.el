@@ -31,9 +31,11 @@
   :custom
   (exec-path-from-shell-arguments '("-l"))
   :config
-  (when (or (memq window-system '(mac ns x))
-            (daemonp))
-    (exec-path-from-shell-initialize)))
+  ;; Initialize exec-path from shell, including specific variables
+  (exec-path-from-shell-copy-env "PATH")
+  (exec-path-from-shell-copy-env "MANPATH")
+  (exec-path-from-shell-initialize)
+  )
 
 ;; For gcmh - Garbage Collector Magic Hack
 (use-package gcmh

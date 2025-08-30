@@ -119,11 +119,17 @@
 ;; For flyspell - Spell checking
 (use-package flyspell
   :ensure nil
+  :defer t
   :hook ((text-mode . flyspell-mode)
          (prog-mode . flyspell-prog-mode))
   :init
-  (setq ispell-program-name "aspell"
-        ispell-extra-args '("--sug-mode=ultra")))
+  ;; Use full path to aspell to avoid PATH issues
+  (setq ispell-program-name "/opt/homebrew/bin/aspell"
+        ispell-extra-args '("--sug-mode=ultra" "--lang=en_US"))
+  :config
+  ;; Ensure proper encoding for aspell
+  (setq ispell-encoding8-command t)
+  (setq ispell-dictionary "en_US"))
 
 ;; For eldoc - Documentation display
 (use-package eldoc
