@@ -8,20 +8,39 @@
 (require 'init-const)
 (require 'init-funcs)
 
-;;(setq frame-resize-pixelwise t)
-
-
-;; cursor type set hbar
+;; UI settings
 (setq-default cursor-type 'bar)
+
+;; Mouse & Smooth Scroll
+(when (display-graphic-p)
+  (setq mouse-wheel-scroll-amount '(1 ((shift) . hscroll))
+        mouse-wheel-scroll-amount-horizontal 1
+        mouse-wheel-progressive-speed nil))
+
+(setq scroll-step 1
+      scroll-margin 0
+      scroll-conservatively 100000
+      auto-window-vscroll nil
+      scroll-preserve-screen-position t)
+
+;; macOS specific settings
+(when sys/macp
+  (setq ns-use-thin-smoothing t)
+  ;; Don't open a file in a new frame
+  (setq ns-pop-up-frames nil))
 
 ;; For all-the-icons
 (use-package all-the-icons
   :ensure t
+  :defer t
+  :diminish
   :if (display-graphic-p))
 
 ;; For composite (built-in ligature support)
 (use-package composite
   :ensure nil
+  :defer t
+  :diminish
   :init (defvar composition-ligature-table (make-char-table nil))
   :hook (((prog-mode
            conf-mode nxml-mode markdown-mode help-mode
@@ -59,104 +78,35 @@
                             `([,(cdr char-regexp) 0 font-shape-gstring]))))
   (set-char-table-parent composition-ligature-table composition-function-table))
 
-
-
-
-
-
-
-
-
+;; For keycast - Show current key binding in mode line
 (use-package keycast
   :ensure t
+  :defer t
+  :diminish
   :init
-  ;; Option 1: Try 't' to append after the last element of mode-line-format.
-  ;;(setq keycast-mode-line-insert-after t)
   (setq keycast-mode-line-insert-after 'doom-modeline-misc-info)
   :config
   (keycast-mode-line-mode 1))
 
 ;; For mini-frame (used by nano setup)
 (use-package mini-frame
-  :ensure t)
-
-;; For ef-theme
-(use-package ef-themes
   :ensure t
-  ;;:init
-  ;; ef-dream or ef-day
-  ;; (load-theme 'ef-day :no-confirm)
-  :config
-  (setq ef-themes-mixed-fonts t
-        ef-themes-variable-pitch-ui t)
-
-  ;; Commented out to prevent conflicts with kanagawa-themes
-  ;; (setq ef-themes-headings
-  ;;     '((1 light variable-pitch 1.2)
-  ;;       (2 regular 1.1)
-  ;;       (3 1.1)
-  ;;       (agenda-date 1.3)
-  ;;       (agenda-structure variable-pitch light 1.5)
-  ;;       (t variable-pitch)))
-  (setq org-modern-timestamp nil)
-
-  )
-
-(use-package moe-theme
-  :ensure t
-;;  :init
-;;  (load-theme 'moe-dark :no-confirm)
-  :config
-  (setq moe-theme-highlight-buffer-id t)
-  (setq moe-theme-modeline-color 'cyan)
-  )
-
-(use-package modus-themes
-  ;;:ensure t
-  ;;:init
-  ;;(load-theme 'modus-operandi-tinted t)
-  :config
-  (setq modus-themes-bold-constructs t
-        modus-themes-italic-constructs t
-        modus-themes-mixed-fonts t
-        modus-themes-variable-pitch-ui t)
-
-  (setq modus-themes-prompts '(bold italic))
-  (setq modus-themes-completions
-      '((matches . (extrabold underline))
-        (selection . (semibold italic))))
-
-  ;; Commented out to prevent conflicts with kanagawa-themes
-  ;; (setq modus-themes-headings
-  ;;     '((1 . (variable-pitch 1.5))
-  ;;       (2 . (1.3))
-  ;;       (agenda-date . (1.3))
-  ;;       (agenda-structure . (variable-pitch light 1.8))
-  ;;       (t . (1.1))))
-
-  )
-
-(use-package kanagawa-themes
-  :ensure t
-  :init
-  ;; Set the variables BEFORE loading the theme
-  (setq
-   kanagawa-themes-org-height nil
-   kanagawa-themes-org-bold nil
-   )
-  ;; Load theme AFTER setting the variables
-  (load-theme 'kanagawa-wave t)
-  )
+  :defer t
+  :diminish)
 
 ;; For nerd-icons
 (use-package nerd-icons
   :ensure t
+  :defer t
+  :diminish
   :custom
   (nerd-icons-font-family "Symbols Nerd Font Mono"))
 
 ;; For posframe (pop-up frames)
 (use-package posframe
   :ensure t
+  :defer t
+  :diminish
   :hook (after-load-theme . posframe-delete-all)
   :init
   (defface posframe-border
@@ -179,52 +129,12 @@
                   (* 2 (plist-get info :font-height)))
                2)))))
 
-;;; Font settings
-(defun +my/better-font()
-  "Set up fonts for UI."
-  (interactive)
-  (if (display-graphic-p)
-      (progn
-        ;; Fixedsys Excelsior is great. Input Serif Condensed 12
-        ;; Fantasque Sans Mono
-        ;; 中文字体
-        (set-face-attribute 'default nil :font "Fantasque Sans Mono 14")
-        (dolist
-            (charset '(kana han symbol cjk-misc bopomofo))
-          (set-fontset-font (frame-parameter nil 'font)
-                            charset
-                            ;; WenQuanyi Micro Hei
-                            (font-spec :family "LXGW WenKai Mono" :size 13)))))
-  )
-
-(defun +my|init-font(frame)
-  "Initialize font for FRAME."
-  (with-selected-frame frame
-    (if (display-graphic-p)
-        (+my/better-font))))
-
-(if (and (fboundp 'daemonp) (daemonp))
-    (add-hook 'after-make-frame-functions #'+my|init-font)
-  (+my/better-font))
-
-;; Mouse & Smooth Scroll
-(when (display-graphic-p)
-  (setq mouse-wheel-scroll-amount '(1 ((shift) . hscroll))
-        mouse-wheel-scroll-amount-horizontal 1
-        mouse-wheel-progressive-speed nil))
-
-(setq scroll-step 1
-      scroll-margin 0
-      scroll-conservatively 100000
-      auto-window-vscroll nil
-      scroll-preserve-screen-position t)
-
-;; macOS specific settings
-(when sys/macp
-  (setq ns-use-thin-smoothing t)
-  ;; Don't open a file in a new frame
-  (setq ns-pop-up-frames nil))
-
+;; For beacon - Highlight cursor position after scrolling
+(use-package beacon
+  :ensure t
+  :defer t
+  :diminish
+  :config (beacon-mode 1))
 
 (provide 'setup-ui)
 ;;; setup-ui.el ends here
