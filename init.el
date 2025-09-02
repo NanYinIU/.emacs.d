@@ -155,16 +155,24 @@
 
 ;; Load functional modules
 (require 'setup-core)       ; Core packages and settings
+(require 'setup-terminal)   ; Terminal and shell configurations
+(require 'setup-fonts)      ; Font and typography settings
+(require 'setup-themes)     ; Theme configurations
 (require 'setup-ui)         ; UI related settings and packages
 (require 'setup-completion) ; Completion frameworks
 (require 'setup-editing)    ; Editing tools and enhancements
-(require 'setup-org)        ; Org-mode configuration
+(require 'setup-languages)  ; Language-specific configurations
+(require 'setup-org-core)   ; Core Org mode functionality
+(require 'setup-org-roam)   ; Org Roam configuration
+(require 'setup-org-capture) ; Org capture templates and workflows
+(require 'setup-org-agenda) ; Org agenda and scheduling
+(require 'setup-org-ui)     ; Org mode visual enhancements
 (require 'setup-python)     ; Enhanced Python support
 (require 'setup-project)    ; Project management
-(require 'setup-programming) ; Programming language support
+(require 'setup-programming) ; Programming language support and LSP
 (require 'setup-misc)       ; Miscellaneous settings
-(require 'setup-ai)
-(require 'setup-modeline)
+(require 'setup-ai)         ; AI integration
+(require 'setup-modeline)   ; Mode line configuration
 
 ;; Variables configured via the custom UI go in custom.el
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
