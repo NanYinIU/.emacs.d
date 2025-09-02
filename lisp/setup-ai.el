@@ -58,9 +58,22 @@
                        :type string            ; :type value must be a symbol
                        :description "the name of the buffer whose contents are to be retrieved"))
    :category "emacs")                     ; An arbitrary label for grouping
+
+
+  (gptel-make-gemini "Gemini" :key (get-authinfo-password "gemini.com") :stream t)
+
   (setq
-   gptel-model 'gemini-2.0-flash
-   gptel-backend  (gptel-make-gemini "Gemini" :key (get-authinfo-password "gemini.com") :stream t))
+   gptel-model 'qwen-3-235b-a22b-thinking-2507
+   gptel-backend (gptel-make-openai "Cerebras"
+                   :host "api.cerebras.ai"
+                   :endpoint "/v1/chat/completions"
+                   :stream t                             ;optionally nil as Cerebras is instant AI
+                   :key (get-authinfo-password "cerebras.ai")                   ;can be a function that returns the key
+                   :models '(llama3.3-70b
+                             qwen-3-235b-a22b-thinking-2507
+                             qwen-3-coder-480b))
+   )
+
   )
 
 (use-package mcp
