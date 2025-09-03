@@ -5,3 +5,9 @@ url = git@github.com:rougier/nano-emacs.git
 [submodule "org-modern-indent"]
 path = site-lisp/org-modern-indent
 url = git@github.com:jdtsmith/org-modern-indent.git
+
+
+[submodule "lambda-line"]
+path = site-lisp/lambda-line
+url = git@github.com:Lambda-Emacs/lambda-line.git
+
